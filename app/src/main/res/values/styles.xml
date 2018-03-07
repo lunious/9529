@@ -138,9 +138,9 @@
         <!--是否去除边框-->
         <item name="android:windowFrame">@null</item>
         <!--是否浮现在activity之上-->
-        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsFloating">false</item>
         <!--背景颜色-->
-        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowBackground">@color/main_status_blue</item>
         <!--是否模糊-->
         <item name="android:backgroundDimEnabled">true</item>
     </style>
