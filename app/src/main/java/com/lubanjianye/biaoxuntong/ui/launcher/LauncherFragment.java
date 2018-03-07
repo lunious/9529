@@ -1,12 +1,7 @@
 package com.lubanjianye.biaoxuntong.ui.launcher;
 
 import android.content.Intent;
-import android.util.Log;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
 import com.lubanjianye.biaoxuntong.R;
 import com.lubanjianye.biaoxuntong.api.BiaoXunTongApi;
 import com.lubanjianye.biaoxuntong.app.BiaoXunTong;
@@ -25,8 +20,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
-import static com.lubanjianye.biaoxuntong.app.BiaoXunTong.getApplicationContext;
-
 
 /**
  * 项目名:   AppLunious
@@ -37,10 +30,8 @@ import static com.lubanjianye.biaoxuntong.app.BiaoXunTong.getApplicationContext;
  * 描述:     TODO
  */
 
-public class LauncherFragment extends BaseFragment implements BDLocationListener {
+public class LauncherFragment extends BaseFragment {
 
-
-    public LocationClient mLocationClient = null;
     private long userId = 0;
     private String token = null;
 
@@ -53,24 +44,11 @@ public class LauncherFragment extends BaseFragment implements BDLocationListener
     @Override
     public void initView() {
 
-        mLocationClient = new LocationClient(getApplicationContext());
-        //声明LocationClient类
-        mLocationClient.registerLocationListener(this);
-        //注册监听函数
-        LocationClientOption option = new LocationClientOption();
-
-        option.setIsNeedAddress(true);
-        //可选，是否需要地址信息，默认为不需要，即参数为false
-        //如果开发者需要获得当前点的地址信息，此处必须为true
-
-        mLocationClient.setLocOption(option);
 
     }
 
     @Override
     public void initData() {
-        mLocationClient.start();
-
 
     }
 
@@ -162,14 +140,6 @@ public class LauncherFragment extends BaseFragment implements BDLocationListener
 
         }
 
-
-    }
-
-
-    @Override
-    public void onReceiveLocation(BDLocation bdLocation) {
-        String city = bdLocation.getCity();
-        Log.d("BDASBDASDA", city);
 
     }
 

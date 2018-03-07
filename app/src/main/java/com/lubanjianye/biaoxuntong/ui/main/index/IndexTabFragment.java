@@ -5,14 +5,18 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.igexin.sdk.PushManager;
 import com.lubanjianye.biaoxuntong.R;
@@ -58,7 +62,7 @@ import static com.lubanjianye.biaoxuntong.app.BiaoXunTong.getApplicationContext;
  * 描述:     TODO
  */
 
-public class IndexTabFragment extends BaseFragment implements View.OnClickListener {
+public class IndexTabFragment extends BaseFragment implements View.OnClickListener, BDLocationListener {
 
     private SlidingTabLayout indexStlTab = null;
     private ViewPager indexVp = null;
@@ -74,12 +78,6 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
 
 
     private long userId = 0;
-    private String mobile = null;
-    private String nickName = null;
-    private String token = null;
-    private String comid = null;
-    private String imageUrl = null;
-    private String companyName = null;
     private PromptDialog promptDialog;
 
     private Boolean IsToken = true;
@@ -87,6 +85,8 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
 
     private LinearLayout ll_location = null;
     private AppCompatTextView tv_location = null;
+
+    public LocationClient mLocationClient = null;
 
 
     @Override
@@ -125,6 +125,19 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
         ll_location.setOnClickListener(this);
 
 
+        //定位相关
+        mLocationClient = new LocationClient(getApplicationContext());
+        //声明LocationClient类
+        mLocationClient.registerLocationListener(this);
+        //注册监听函数
+        LocationClientOption option = new LocationClientOption();
+
+        option.setIsNeedAddress(true);
+        //可选，是否需要地址信息，默认为不需要，即参数为false
+        //如果开发者需要获得当前点的地址信息，此处必须为true
+        mLocationClient.setLocOption(option);
+
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -149,7 +162,8 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
     public void initData() {
 
         requestData();
-
+        //开始定位
+        mLocationClient.start();
 
         //热门城市
         hotCities = new ArrayList<>();
@@ -195,7 +209,6 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
             List<UserProfile> users = DatabaseManager.getInstance().getDao().loadAll();
             for (int i = 0; i < users.size(); i++) {
                 userId = users.get(0).getId();
-                token = users.get(0).getToken();
             }
 
             OkGo.<String>post(BiaoXunTongApi.URL_INDEXTAB)
@@ -353,7 +366,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                         .setFragmentManager(getFragmentManager())
                         .enableAnimation(true)
                         .setAnimationStyle(R.style.CustomAnim)
-                        .setLocatedCity(new LocatedCity("杭州", "浙江", "101210101"))
+                        .setLocatedCity(new LocatedCity("成都", "浙江", "101210101"))
                         .setHotCities(hotCities)
                         .setOnPickListener(new OnPickListener() {
                             @Override
@@ -368,7 +381,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                                     @Override
                                     public void run() {
                                         CityPicker.getInstance()
-                                                .locateComplete(new LocatedCity("深圳", "广东", "101280601"),
+                                                .locateComplete(new LocatedCity("成都", "广东", "101280601"),
                                                         LocateState.SUCCESS);
                                     }
                                 }, 2000);
@@ -381,4 +394,9 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
+    @Override
+    public void onReceiveLocation(BDLocation bdLocation) {
+        String city = bdLocation.getCity();
+        Log.d("BDASBDASDA", city);
+    }
 }
