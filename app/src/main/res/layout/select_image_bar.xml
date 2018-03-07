@@ -17,7 +17,7 @@
             android:layout_height="?attr/actionBarSize"
             android:clickable="true"
             android:scaleType="centerInside"
-            android:src="@mipmap/ib_back" />
+            android:src="@mipmap/white_back" />
 
         <FrameLayout
             android:layout_width="wrap_content"

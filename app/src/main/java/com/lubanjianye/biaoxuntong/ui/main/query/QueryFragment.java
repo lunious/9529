@@ -1,15 +1,10 @@
 package com.lubanjianye.biaoxuntong.ui.main.query;
 
 import android.content.Intent;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -25,8 +20,6 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
-import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.gongwen.marqueen.MarqueeFactory;
 import com.gongwen.marqueen.SimpleMF;
 import com.gongwen.marqueen.SimpleMarqueeView;
@@ -95,10 +88,6 @@ public class QueryFragment extends BaseFragment implements View.OnClickListener 
     String provinceCode = "510000";
 
     private long id = 0;
-    private String nickName = "";
-    private String token = "";
-    private String comid = "";
-    private String imageUrl = "";
     private String mobile = "";
 
     private SpinerPopWindow<String> mSpinerZzlx;
@@ -261,10 +250,6 @@ public class QueryFragment extends BaseFragment implements View.OnClickListener 
         List<UserProfile> users = DatabaseManager.getInstance().getDao().loadAll();
         for (int i = 0; i < users.size(); i++) {
             id = users.get(0).getId();
-            nickName = users.get(0).getNickName();
-            token = users.get(0).getToken();
-            comid = users.get(0).getComid();
-            imageUrl = users.get(0).getImageUrl();
             mobile = users.get(0).getMobile();
         }
 
@@ -583,10 +568,6 @@ public class QueryFragment extends BaseFragment implements View.OnClickListener 
                                     List<UserProfile> users = DatabaseManager.getInstance().getDao().loadAll();
                                     for (int i = 0; i < users.size(); i++) {
                                         id = users.get(0).getId();
-                                        nickName = users.get(0).getNickName();
-                                        token = users.get(0).getToken();
-                                        comid = users.get(0).getComid();
-                                        imageUrl = users.get(0).getImageUrl();
                                         mobile = users.get(0).getMobile();
                                     }
 
@@ -641,10 +622,6 @@ public class QueryFragment extends BaseFragment implements View.OnClickListener 
                         List<UserProfile> users = DatabaseManager.getInstance().getDao().loadAll();
                         for (int i = 0; i < users.size(); i++) {
                             id = users.get(0).getId();
-                            nickName = users.get(0).getNickName();
-                            token = users.get(0).getToken();
-                            comid = users.get(0).getComid();
-                            imageUrl = users.get(0).getImageUrl();
                             mobile = users.get(0).getMobile();
                         }
 

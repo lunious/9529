@@ -2,14 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/main_theme_color">
+    android:layout_height="wrap_content">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/d42"
-        android:layout_marginTop="@dimen/d24"
+        android:background="@color/main_theme_color"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
@@ -25,8 +24,9 @@
                 android:layout_width="@dimen/d16"
                 android:layout_height="@dimen/d16"
                 android:layout_gravity="center"
+                android:layout_marginTop="@dimen/d2"
                 android:background="#00ffffff"
-                android:src="@mipmap/white_back" />
+                android:src="@mipmap/btn_back" />
 
         </LinearLayout>
 

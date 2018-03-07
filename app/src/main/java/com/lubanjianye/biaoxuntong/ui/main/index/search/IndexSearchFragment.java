@@ -135,6 +135,8 @@ public class IndexSearchFragment extends BaseFragment implements View.OnClickLis
         ImageView searchButton = (ImageView) viewSearcher.findViewById(R.id.search_mag_icon);
 
         searchButton.setImageResource(R.mipmap.search);
+        searchButton.setMaxHeight(R.dimen.d12);
+        searchButton.setMaxWidth(R.dimen.d12);
 
 
         //搜索功能

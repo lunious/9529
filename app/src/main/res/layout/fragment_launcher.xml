@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/ll_bottom"
-        android:background="@mipmap/home"/>
+        android:background="@mipmap/home" />
 
     <RelativeLayout
         android:id="@+id/ll_bottom"
@@ -20,14 +20,12 @@
 
         <pl.droidsonroids.gif.GifImageView
             android:id="@+id/gifImageView"
-            android:layout_width="@dimen/d120"
-            android:layout_height="@dimen/d40"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/d8"
             android:layout_centerInParent="true"
             android:src="@drawable/newlogo" />
 
     </RelativeLayout>
-
-
 
 
 </RelativeLayout>
