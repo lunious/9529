@@ -2,11 +2,13 @@ package com.lubanjianye.biaoxuntong.ui.main.index;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -20,6 +22,12 @@ import com.lubanjianye.biaoxuntong.database.UserProfile;
 import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
 import com.lubanjianye.biaoxuntong.api.BiaoXunTongApi;
 import com.lubanjianye.biaoxuntong.sign.SignInActivity;
+import com.lubanjianye.biaoxuntong.ui.citypicker.CityPicker;
+import com.lubanjianye.biaoxuntong.ui.citypicker.adapter.OnPickListener;
+import com.lubanjianye.biaoxuntong.ui.citypicker.model.City;
+import com.lubanjianye.biaoxuntong.ui.citypicker.model.HotCity;
+import com.lubanjianye.biaoxuntong.ui.citypicker.model.LocateState;
+import com.lubanjianye.biaoxuntong.ui.citypicker.model.LocatedCity;
 import com.lubanjianye.biaoxuntong.ui.main.index.search.IndexSearchActivity;
 import com.lubanjianye.biaoxuntong.ui.main.index.sortcolumn.SortColumnActivity;
 import com.lubanjianye.biaoxuntong.util.dialog.PromptButton;
@@ -141,6 +149,12 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
     public void initData() {
 
         requestData();
+
+
+        //热门城市
+        hotCities = new ArrayList<>();
+        hotCities.add(new HotCity("四川", "四川", null));
+        hotCities.add(new HotCity("重庆", "重庆", null));
 
     }
 
@@ -323,6 +337,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
 
     }
 
+    private List<HotCity> hotCities;
 
     @Override
     public void onClick(View view) {
@@ -334,7 +349,32 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                 startActivity(new Intent(getActivity(), SortColumnActivity.class));
                 break;
             case R.id.ll_location:
-                ToastUtil.shortToast(getContext(), "定位");
+                CityPicker.getInstance()
+                        .setFragmentManager(getFragmentManager())
+                        .enableAnimation(true)
+                        .setAnimationStyle(R.style.CustomAnim)
+                        .setLocatedCity(new LocatedCity("杭州", "浙江", "101210101"))
+                        .setHotCities(hotCities)
+                        .setOnPickListener(new OnPickListener() {
+                            @Override
+                            public void onPick(int position, City data) {
+                                tv_location.setText(data == null ? "四川" : String.format("%s", data.getName()));
+                            }
+
+                            @Override
+                            public void onLocate() {
+                                //开始定位，这里模拟一下定位
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        CityPicker.getInstance()
+                                                .locateComplete(new LocatedCity("深圳", "广东", "101280601"),
+                                                        LocateState.SUCCESS);
+                                    }
+                                }, 2000);
+                            }
+                        })
+                        .show();
                 break;
             default:
                 break;

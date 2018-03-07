@@ -87,7 +87,7 @@
             android:name=".base.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
+            android:theme="@style/DefaultCityPickerTheme"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
