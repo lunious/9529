@@ -90,8 +90,6 @@ dependencies {
     compile 'com.lzy.net:okgo:3.0.4'
     //SmartRefreshLayout
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.4-7'
-    //gif-drawable
-    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.8'
     //SwipeRecyclerView
     compile 'com.yanzhenjie:recyclerview-swipe:1.1.4'
 
