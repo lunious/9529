@@ -100,7 +100,7 @@
                 android:id="@+id/atv_me"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/d30"
+                android:layout_marginTop="@dimen/d18"
                 android:gravity="center"
                 android:text="我"
                 android:textColor="@color/main_status_white"
@@ -113,7 +113,7 @@
                 android:layout_height="@dimen/d64"
                 android:layout_below="@+id/atv_me"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/d8"
+                android:layout_marginTop="@dimen/d2"
                 android:src="@mipmap/widget_default_face"
                 app:civ_border_color="@color/main_status_white"
                 app:civ_border_width="@dimen/d1" />
