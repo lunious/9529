@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,6 +17,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.classic.common.MultipleStatusView;
 import com.lubanjianye.biaoxuntong.R;
+import com.lubanjianye.biaoxuntong.app.BiaoXunTong;
 import com.lubanjianye.biaoxuntong.base.BaseFragment;
 import com.lubanjianye.biaoxuntong.database.DatabaseManager;
 import com.lubanjianye.biaoxuntong.database.UserProfile;
@@ -23,6 +25,12 @@ import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
 import com.lubanjianye.biaoxuntong.api.BiaoXunTongApi;
 import com.lubanjianye.biaoxuntong.sign.SignInActivity;
 import com.lubanjianye.biaoxuntong.ui.browser.BrowserActivity;
+import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexBxtgdjDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexScgggDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexSggjyDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexSggjycgrowDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexSggjycgtableDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexXcgggDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.main.query.CompanySearchResultActivity;
 import com.lubanjianye.biaoxuntong.ui.main.user.avater.AvaterActivity;
 import com.lubanjianye.biaoxuntong.ui.share.OpenBuilder;
@@ -90,6 +98,9 @@ public class ResultSggjyzbjgDetailFragment extends BaseFragment implements View.
     private LinearLayout llWeixinBoShare = null;
     private LinearLayout llPyqShare = null;
 
+
+    private AppCompatTextView tvGg = null;
+
     private static final String ARG_ENTITYID = "ARG_ENTITYID";
     private static final String ARG_ENTITY = "ARG_ENTITY";
     private static final String ARG_AJAXTYPE = "ARG_AJAXTYPE";
@@ -98,6 +109,9 @@ public class ResultSggjyzbjgDetailFragment extends BaseFragment implements View.
     private int myFav = -1;
     private int mEntityId = -1;
     private String mEntity = "";
+
+    private String ggEntity = "";
+    private String ggEntityId = "";
 
     private String shareTitle = "";
     private String shareContent = "";
@@ -175,6 +189,9 @@ public class ResultSggjyzbjgDetailFragment extends BaseFragment implements View.
         llIvBack.setOnClickListener(this);
         llShare.setOnClickListener(this);
         llFav.setOnClickListener(this);
+
+        tvGg = getView().findViewById(R.id.tv_data_gg);
+        tvGg.setOnClickListener(this);
 
         tvOwerDiyi.setOnClickListener(this);
         tvOwerDier.setOnClickListener(this);
@@ -278,6 +295,15 @@ public class ResultSggjyzbjgDetailFragment extends BaseFragment implements View.
                                 }
                                 if ("200".equals(status)) {
                                     final JSONObject data = object.getJSONObject("data");
+                                    //判断有无相关公告
+                                    final JSONObject arrayGg = data.getJSONObject("ggId");
+                                    if (arrayGg != null) {
+                                        ggEntity = arrayGg.getString("entity");
+                                        ggEntityId = arrayGg.getString("entityId");
+                                        if (TextUtils.isEmpty(ggEntity)) {
+                                            tvGg.setVisibility(View.GONE);
+                                        }
+                                    }
 
                                     final String url = data.getString("url");
                                     shareUrl = url;
@@ -442,8 +468,18 @@ public class ResultSggjyzbjgDetailFragment extends BaseFragment implements View.
 
                                 if ("200".equals(status)) {
                                     final String url = data.getString("url");
-                                    shareUrl = url;
 
+                                    //判断有无相关公告
+                                    final JSONObject arrayGg = data.getJSONObject("ggId");
+                                    if (arrayGg != null) {
+                                        ggEntity = arrayGg.getString("entity");
+                                        ggEntityId = arrayGg.getString("entityId");
+                                        if (TextUtils.isEmpty(ggEntity)) {
+                                            tvGg.setVisibility(View.GONE);
+                                        }
+                                    }
+
+                                    shareUrl = url;
                                     tvDataDetail.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -615,7 +651,54 @@ public class ResultSggjyzbjgDetailFragment extends BaseFragment implements View.
         mShare.setDescription(shareContent);
         mShare.setImageUrl(null);
         mShare.setUrl(BiaoXunTongApi.SHARE_URL + shareUrl);
+        Intent intent = null;
         switch (view.getId()) {
+            case R.id.tv_data_gg:
+                if ("sggjy".equals(ggEntity)) {
+                    intent = new Intent(BiaoXunTong.getApplicationContext(), IndexSggjyDetailActivity.class);
+                    intent.putExtra("entityId", Integer.valueOf(ggEntityId));
+                    intent.putExtra("entity", ggEntity);
+                    intent.putExtra("ajaxlogtype", "0");
+                    intent.putExtra("mId", "");
+                    startActivity(intent);
+
+                } else if ("xcggg".equals(ggEntity)) {
+                    intent = new Intent(BiaoXunTong.getApplicationContext(), IndexXcgggDetailActivity.class);
+                    intent.putExtra("entityId", Integer.valueOf(ggEntityId));
+                    intent.putExtra("entity", ggEntity);
+                    intent.putExtra("ajaxlogtype", "0");
+                    intent.putExtra("mId", "");
+                    startActivity(intent);
+                } else if ("bxtgdj".equals(ggEntity)) {
+                    intent = new Intent(BiaoXunTong.getApplicationContext(), IndexBxtgdjDetailActivity.class);
+                    intent.putExtra("entityId", Integer.valueOf(ggEntityId));
+                    intent.putExtra("entity", ggEntity);
+                    intent.putExtra("ajaxlogtype", "0");
+                    intent.putExtra("mId", "");
+                    startActivity(intent);
+                } else if ("sggjycgtable".equals(ggEntity)) {
+                    intent = new Intent(BiaoXunTong.getApplicationContext(), IndexSggjycgtableDetailActivity.class);
+                    intent.putExtra("entityId", Integer.valueOf(ggEntityId));
+                    intent.putExtra("entity", ggEntity);
+                    intent.putExtra("ajaxlogtype", "0");
+                    intent.putExtra("mId", "");
+                    startActivity(intent);
+                } else if ("sggjycgrow".equals(ggEntity)) {
+                    intent = new Intent(BiaoXunTong.getApplicationContext(), IndexSggjycgrowDetailActivity.class);
+                    intent.putExtra("entityId", Integer.valueOf(ggEntityId));
+                    intent.putExtra("entity", ggEntity);
+                    intent.putExtra("ajaxlogtype", "0");
+                    intent.putExtra("mId", "");
+                    startActivity(intent);
+                } else if ("scggg".equals(ggEntity)) {
+                    intent = new Intent(BiaoXunTong.getApplicationContext(), IndexScgggDetailActivity.class);
+                    intent.putExtra("entityId", Integer.valueOf(ggEntityId));
+                    intent.putExtra("entity", ggEntity);
+                    intent.putExtra("ajaxlogtype", "0");
+                    intent.putExtra("mId", "");
+                    startActivity(intent);
+                }
+                break;
             case R.id.ll_weibo_share:
                 OpenBuilder.with(getActivity())
                         .useWeibo(OpenConstant.WB_APP_KEY)
