@@ -330,7 +330,9 @@ public class CompanyDetailFragment extends BaseFragment implements View.OnClickL
                             if (tvQyzzTip != null) {
                                 tvQyzzTip.setVisibility(View.GONE);
                             }
+
                             setQyzzData(array);
+                            companyDetailStatusView.showContent();
                         } else {
                             if (mDataList != null) {
                                 mDataList.clear();
@@ -370,6 +372,7 @@ public class CompanyDetailFragment extends BaseFragment implements View.OnClickL
                                 tvRyzzTip.setVisibility(View.GONE);
                             }
                             setRyzzData(array);
+                            companyDetailStatusView.showContent();
                         } else {
                             if (mRyzzDataList != null) {
                                 mRyzzDataList.clear();
@@ -411,6 +414,7 @@ public class CompanyDetailFragment extends BaseFragment implements View.OnClickL
                                 tvQyyjTip.setVisibility(View.GONE);
                             }
                             setQyyjData(array);
+                            companyDetailStatusView.showContent();
                         } else {
                             if (mQyyjDataList != null) {
                                 mQyyjDataList.clear();
