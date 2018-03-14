@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.classic.common.MultipleStatusView;
 import com.lubanjianye.biaoxuntong.R;
+import com.lubanjianye.biaoxuntong.app.BiaoXunTong;
 import com.lubanjianye.biaoxuntong.base.BaseFragment;
 import com.lubanjianye.biaoxuntong.database.DatabaseManager;
 import com.lubanjianye.biaoxuntong.database.UserProfile;
@@ -22,6 +23,12 @@ import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
 import com.lubanjianye.biaoxuntong.api.BiaoXunTongApi;
 import com.lubanjianye.biaoxuntong.sign.SignInActivity;
 import com.lubanjianye.biaoxuntong.ui.browser.BrowserActivity;
+import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexBxtgdjDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexScgggDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexSggjyDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexSggjycgrowDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexSggjycgtableDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexXcgggDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.share.OpenBuilder;
 import com.lubanjianye.biaoxuntong.ui.share.OpenConstant;
 import com.lubanjianye.biaoxuntong.ui.share.Share;
@@ -89,11 +96,14 @@ public class ResultXjgggDetailFragment extends BaseFragment implements View.OnCl
     private LinearLayout llWeixinBoShare = null;
     private LinearLayout llPyqShare = null;
 
+    private AppCompatTextView tvGg = null;
 
     private static final String ARG_ENTITYID = "ARG_ENTITYID";
     private static final String ARG_ENTITY = "ARG_ENTITY";
     private static final String ARG_AJAXTYPE = "ARG_AJAXTYPE";
 
+    private String ggEntity = "";
+    private String ggEntityId = "";
 
     private int myFav = -1;
     private int mEntityId = -1;
@@ -165,6 +175,9 @@ public class ResultXjgggDetailFragment extends BaseFragment implements View.OnCl
         tvBucai = getView().findViewById(R.id.tv_bucai);
         llType = getView().findViewById(R.id.ll_type);
 
+
+        tvGg = getView().findViewById(R.id.tv_data_gg);
+        tvGg.setOnClickListener(this);
 
         llWeiBoShare = getView().findViewById(R.id.ll_weibo_share);
         llQQBoShare = getView().findViewById(R.id.ll_qq_share);
@@ -269,6 +282,16 @@ public class ResultXjgggDetailFragment extends BaseFragment implements View.OnCl
                                 if ("200".equals(status)) {
                                     xjgggDetailStatusView.showContent();
                                     final JSONObject data = object.getJSONObject("data");
+                                    //判断有无相关公告
+                                    final JSONObject arrayGg = data.getJSONObject("ggId");
+                                    if (arrayGg != null) {
+                                        ggEntity = arrayGg.getString("entity");
+                                        ggEntityId = arrayGg.getString("entityId");
+                                        if (TextUtils.isEmpty(ggEntity)) {
+                                            tvGg.setVisibility(View.GONE);
+                                        }
+                                    }
+
                                     String reportTitle = data.getString("reportTitle");
                                     shareTitle = reportTitle;
                                     if (!TextUtils.isEmpty(reportTitle)) {
@@ -439,6 +462,16 @@ public class ResultXjgggDetailFragment extends BaseFragment implements View.OnCl
                                 if ("200".equals(status)) {
                                     xjgggDetailStatusView.showContent();
                                     final JSONObject data = object.getJSONObject("data");
+                                    //判断有无相关公告
+                                    final JSONObject arrayGg = data.getJSONObject("ggId");
+                                    if (arrayGg != null) {
+                                        ggEntity = arrayGg.getString("entity");
+                                        ggEntityId = arrayGg.getString("entityId");
+                                        if (TextUtils.isEmpty(ggEntity)) {
+                                            tvGg.setVisibility(View.GONE);
+                                        }
+                                    }
+
                                     String reportTitle = data.getString("reportTitle");
                                     shareTitle = reportTitle;
                                     if (!TextUtils.isEmpty(reportTitle)) {
@@ -614,7 +647,55 @@ public class ResultXjgggDetailFragment extends BaseFragment implements View.OnCl
         mShare.setDescription(shareContent);
         mShare.setImageUrl(null);
         mShare.setUrl(BiaoXunTongApi.SHARE_URL + shareUrl);
+        Intent intent = null;
         switch (view.getId()) {
+
+            case R.id.tv_data_gg:
+                if ("sggjy".equals(ggEntity)) {
+                    intent = new Intent(BiaoXunTong.getApplicationContext(), IndexSggjyDetailActivity.class);
+                    intent.putExtra("entityId", Integer.valueOf(ggEntityId));
+                    intent.putExtra("entity", ggEntity);
+                    intent.putExtra("ajaxlogtype", "0");
+                    intent.putExtra("mId", "");
+                    startActivity(intent);
+
+                } else if ("xcggg".equals(ggEntity)) {
+                    intent = new Intent(BiaoXunTong.getApplicationContext(), IndexXcgggDetailActivity.class);
+                    intent.putExtra("entityId", Integer.valueOf(ggEntityId));
+                    intent.putExtra("entity", ggEntity);
+                    intent.putExtra("ajaxlogtype", "0");
+                    intent.putExtra("mId", "");
+                    startActivity(intent);
+                } else if ("bxtgdj".equals(ggEntity)) {
+                    intent = new Intent(BiaoXunTong.getApplicationContext(), IndexBxtgdjDetailActivity.class);
+                    intent.putExtra("entityId", Integer.valueOf(ggEntityId));
+                    intent.putExtra("entity", ggEntity);
+                    intent.putExtra("ajaxlogtype", "0");
+                    intent.putExtra("mId", "");
+                    startActivity(intent);
+                } else if ("sggjycgtable".equals(ggEntity)) {
+                    intent = new Intent(BiaoXunTong.getApplicationContext(), IndexSggjycgtableDetailActivity.class);
+                    intent.putExtra("entityId", Integer.valueOf(ggEntityId));
+                    intent.putExtra("entity", ggEntity);
+                    intent.putExtra("ajaxlogtype", "0");
+                    intent.putExtra("mId", "");
+                    startActivity(intent);
+                } else if ("sggjycgrow".equals(ggEntity)) {
+                    intent = new Intent(BiaoXunTong.getApplicationContext(), IndexSggjycgrowDetailActivity.class);
+                    intent.putExtra("entityId", Integer.valueOf(ggEntityId));
+                    intent.putExtra("entity", ggEntity);
+                    intent.putExtra("ajaxlogtype", "0");
+                    intent.putExtra("mId", "");
+                    startActivity(intent);
+                } else if ("scggg".equals(ggEntity)) {
+                    intent = new Intent(BiaoXunTong.getApplicationContext(), IndexScgggDetailActivity.class);
+                    intent.putExtra("entityId", Integer.valueOf(ggEntityId));
+                    intent.putExtra("entity", ggEntity);
+                    intent.putExtra("ajaxlogtype", "0");
+                    intent.putExtra("mId", "");
+                    startActivity(intent);
+                }
+                break;
             case R.id.ll_weibo_share:
                 OpenBuilder.with(getActivity())
                         .useWeibo(OpenConstant.WB_APP_KEY)
@@ -745,7 +826,7 @@ public class ResultXjgggDetailFragment extends BaseFragment implements View.OnCl
                 }
                 break;
             case R.id.tv_yw:
-                Intent intent = new Intent(getActivity(), BrowserActivity.class);
+                intent = new Intent(getActivity(), BrowserActivity.class);
                 intent.putExtra("url", ywUrl);
                 intent.putExtra("title", shareTitle);
                 startActivity(intent);

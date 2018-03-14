@@ -172,6 +172,16 @@
                                 android:textSize="@dimen/d14" />
 
                         </LinearLayout>
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:id="@+id/tv_data_gg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:paddingRight="@dimen/d10"
+                            android:text="招标公告"
+                            android:textColor="@color/main_status_blue"
+                            android:textSize="@dimen/d15" />
                     </RelativeLayout>
 
                     <View
