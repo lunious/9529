@@ -69,6 +69,8 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
     private LinearLayout llSearch = null;
     private ImageView ivAdd = null;
 
+    private List<HotCity> hotCities;
+
 
     private String clientID = PushManager.getInstance().getClientid(getApplicationContext());
 
@@ -80,7 +82,6 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
     private long userId = 0;
     private PromptDialog promptDialog;
 
-    private Boolean IsToken = true;
     private boolean isInitCache = false;
 
     private LinearLayout ll_location = null;
@@ -147,11 +148,6 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
         if (EventMessage.LOGIN_SUCCSS.equals(message.getMessage()) || EventMessage.LOGIN_OUT.equals(message.getMessage())
                 || EventMessage.TAB_CHANGE.equals(message.getMessage())) {
             //更新UI
-            if (indexStlTab != null) {
-                indexStlTab.setCurrentTab(0);
-                indexStlTab.setViewPager(indexVp);
-                indexStlTab.notifyDataSetChanged();
-            }
             requestData();
         }
 
@@ -236,11 +232,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                                     String name = list.getString("name");
                                     mList.add(name);
                                 }
-
-                                mAdapter = new IndexFragmentAdapter(getContext(), getFragmentManager(), mList);
-                                indexVp.setAdapter(mAdapter);
-                                indexStlTab.setViewPager(indexVp);
-                                mAdapter.notifyDataSetChanged();
+                                setUI(mList);
 
                             } else {
                                 ToastUtil.shortToast(getContext(), message);
@@ -265,11 +257,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                                         String name = list.getString("name");
                                         mList.add(name);
                                     }
-
-                                    mAdapter = new IndexFragmentAdapter(getContext(), getFragmentManager(), mList);
-                                    indexVp.setAdapter(mAdapter);
-                                    indexStlTab.setViewPager(indexVp);
-                                    mAdapter.notifyDataSetChanged();
+                                    setUI(mList);
 
                                 } else {
                                     ToastUtil.shortToast(getContext(), message);
@@ -304,11 +292,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                                     String name = list.getString("name");
                                     mList.add(name);
                                 }
-
-                                mAdapter = new IndexFragmentAdapter(getContext(), getFragmentManager(), mList);
-                                indexVp.setAdapter(mAdapter);
-                                indexStlTab.setViewPager(indexVp);
-                                mAdapter.notifyDataSetChanged();
+                                setUI(mList);
                             } else {
                                 ToastUtil.shortToast(getContext(), message);
                             }
@@ -332,11 +316,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                                         String name = list.getString("name");
                                         mList.add(name);
                                     }
-
-                                    mAdapter = new IndexFragmentAdapter(getContext(), getFragmentManager(), mList);
-                                    indexVp.setAdapter(mAdapter);
-                                    indexStlTab.setViewPager(indexVp);
-                                    mAdapter.notifyDataSetChanged();
+                                    setUI(mList);
 
                                 } else {
                                     ToastUtil.shortToast(getContext(), message);
@@ -350,7 +330,13 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
 
     }
 
-    private List<HotCity> hotCities;
+    private void setUI(List<String> mList) {
+        mAdapter = new IndexFragmentAdapter(getContext(), getFragmentManager(), mList);
+        indexVp.setAdapter(mAdapter);
+        indexStlTab.setViewPager(indexVp);
+        mAdapter.notifyDataSetChanged();
+    }
+
 
     @Override
     public void onClick(View view) {
