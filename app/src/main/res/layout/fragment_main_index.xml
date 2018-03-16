@@ -103,6 +103,7 @@
             tl:tl_indicator_height="@dimen/d2"
             tl:tl_indicator_width_equal_title="true"
             tl:tl_tab_padding="@dimen/d12"
+            android:paddingEnd="@dimen/d34"
             tl:tl_textAllCaps="true"
             tl:tl_textSelectColor="@color/main_theme_color"
             tl:tl_textUnselectColor="#6c6c6c"
