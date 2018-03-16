@@ -89,17 +89,15 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/d36"
-        android:background="#F6F6F6"
         android:orientation="horizontal">
 
         <com.flyco.tablayout.SlidingTabLayout
             android:id="@+id/index_stl_tab"
-            android:layout_width="@dimen/d0"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="9"
             android:background="@color/main_status_white"
             tl:tl_indicator_color="@color/main_theme_color"
             tl:tl_indicator_height="@dimen/d2"
@@ -110,12 +108,19 @@
             tl:tl_textUnselectColor="#6c6c6c"
             tl:tl_textsize="@dimen/d15" />
 
+
         <LinearLayout
-            android:layout_width="@dimen/d0"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/main_status_white"
-            android:gravity="center">
+            android:layout_gravity="right"
+            android:background="@color/transparent_helf"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/line_index" />
 
             <ImageView
                 android:id="@+id/iv_add"
@@ -131,7 +136,7 @@
         </LinearLayout>
 
 
-    </LinearLayout>
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"

@@ -19,6 +19,7 @@
     <color name="toast_background">#66000000</color>
     <color name="bg_press">#ebebeb</color>
     <color name="transparent">#00000000</color>
+    <color name="transparent_helf">#f5ffffff</color>
     <color name="search_hint">#9d9d9d</color>
     <color name="status_text_color">#6c6c6c</color>
 

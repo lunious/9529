@@ -211,7 +211,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                     .params("userId", userId)
                     .params("clientId", clientID)
                     .cacheKey("index_tab_cache_login" + userId)
-                    .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
+                    .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                     .cacheTime(3600 * 48000)
                     .execute(new StringCallback() {
                         @Override
@@ -272,7 +272,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
             OkGo.<String>post(BiaoXunTongApi.URL_INDEXTAB)
                     .params("clientId", clientID)
                     .cacheKey("index_tab_cache_no_login" + userId)
-                    .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
+                    .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                     .cacheTime(3600 * 48000)
                     .execute(new StringCallback() {
                         @Override
