@@ -7,6 +7,7 @@ import android.support.v7.widget.ContentFrameLayout;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.lubanjianye.biaoxuntong.R;
+
 import me.yokeyword.fragmentation_swipeback.SwipeBackActivity;
 
 /**

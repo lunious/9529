@@ -1,7 +1,6 @@
 package com.lubanjianye.biaoxuntong.ui.main.index;
 
 import android.content.Intent;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -31,7 +30,6 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
@@ -192,7 +190,7 @@ public class IndexHyzxListFragment extends BaseFragment {
                         .params("page", page)
                         .params("size", 10)
                         .cacheKey("index_htzx_login_cache" + id)
-                        .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                        .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                         .cacheTime(3600 * 72000)
                         .execute(new StringCallback() {
                             @Override
@@ -276,7 +274,6 @@ public class IndexHyzxListFragment extends BaseFragment {
 
         } else {
             //未登录的数据请求
-
             if (isRefresh) {
                 page = 1;
                 OkGo.<String>post(BiaoXunTongApi.URL_GETINDEXHYZXLIST)

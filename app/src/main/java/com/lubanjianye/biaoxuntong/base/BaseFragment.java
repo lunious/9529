@@ -35,9 +35,6 @@ public abstract class BaseFragment extends SwipeBackFragment {
         return rootView;
     }
 
-    public final BaseActivity getProxyActivity() {
-        return (BaseActivity) _mActivity;
-    }
 
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
