@@ -1,13 +1,12 @@
 package com.lubanjianye.biaoxuntong.base;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.ContentFrameLayout;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.lubanjianye.biaoxuntong.R;
-
-import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
-import me.yokeyword.fragmentation.anim.FragmentAnimator;
 import me.yokeyword.fragmentation_swipeback.SwipeBackActivity;
 
 /**
@@ -25,12 +24,14 @@ public abstract class BaseActivity extends SwipeBackActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //初始化，默认透明状态栏和黑色导航栏
+        ImmersionBar.with(this).init();
         initContainer(savedInstanceState);
     }
 
     //用来容纳Fragment的容器
     private void initContainer(@Nullable Bundle savedInstanceState) {
-        final ContentFrameLayout container = new ContentFrameLayout(this);
+        @SuppressLint("RestrictedApi") final ContentFrameLayout container = new ContentFrameLayout(this);
         container.setId(R.id.fragment_container);
         setContentView(container);
         if (savedInstanceState == null) {
