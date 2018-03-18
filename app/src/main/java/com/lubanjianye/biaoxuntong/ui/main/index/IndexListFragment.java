@@ -20,7 +20,7 @@ import com.lubanjianye.biaoxuntong.database.DatabaseManager;
 import com.lubanjianye.biaoxuntong.database.UserProfile;
 import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
 import com.lubanjianye.biaoxuntong.api.BiaoXunTongApi;
-import com.lubanjianye.biaoxuntong.loadmore.CustomLoadMoreView;
+import com.lubanjianye.biaoxuntong.ui.view.loadmore.CustomLoadMoreView;
 import com.lubanjianye.biaoxuntong.ui.browser.BrowserActivity;
 import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexBxtgdjDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexScgggDetailActivity;
@@ -44,6 +44,10 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -229,7 +233,30 @@ public class IndexListFragment extends BaseFragment {
         indexRefresh = getView().findViewById(R.id.index_refresh);
         loadingStatus = getView().findViewById(R.id.index_list_status_view);
 
+        //注册EventBus
+        EventBus.getDefault().register(this);
+
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        //取消注册EventBus
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void XXXXXX(EventMessage message) {
+
+        if ("sx".equals(message.getMessage())) {
+            //更新UI
+            indexRefresh.autoRefresh();
+
+        }
+
+
+    }
+
 
     @Override
     public void initData() {

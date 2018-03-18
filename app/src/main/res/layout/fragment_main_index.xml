@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:paddingLeft="@dimen/d2"
-                android:text="四川"
+                android:text=""
                 android:textColor="@color/main_status_white"
                 android:textSize="@dimen/d14" />
 
@@ -99,11 +99,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/main_status_white"
+            android:paddingEnd="@dimen/d34"
             tl:tl_indicator_color="@color/main_theme_color"
             tl:tl_indicator_height="@dimen/d2"
             tl:tl_indicator_width_equal_title="true"
             tl:tl_tab_padding="@dimen/d12"
-            android:paddingEnd="@dimen/d34"
             tl:tl_textAllCaps="true"
             tl:tl_textSelectColor="@color/main_theme_color"
             tl:tl_textUnselectColor="#6c6c6c"

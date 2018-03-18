@@ -3,8 +3,10 @@ package com.lubanjianye.biaoxuntong.ui.main.index;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -51,6 +53,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
+
 import static com.lubanjianye.biaoxuntong.app.BiaoXunTong.getApplicationContext;
 
 /**
@@ -88,6 +93,10 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
     private AppCompatTextView tv_location = null;
 
     public LocationClient mLocationClient = null;
+
+    private String locationArea = "";
+
+    private String locationCity = "";
 
 
     @Override
@@ -158,18 +167,6 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
     public void initData() {
 
         requestData();
-        //开始定位
-        mLocationClient.start();
-
-        //热门城市
-        hotCities = new ArrayList<>();
-        hotCities.add(new HotCity("四川", "四川", null));
-        hotCities.add(new HotCity("重庆", "重庆", null));
-
-    }
-
-    @Override
-    public void initEvent() {
 
         if (AppSharePreferenceMgr.contains(getContext(), EventMessage.TOKEN_FALSE)) {
 
@@ -194,6 +191,62 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
             promptDialog.getAlertDefaultBuilder().withAnim(false).cancleAble(false).touchAble(false);
             promptDialog.showWarnAlert("账号登陆过期、请重新登录!", toLogin, cancel, false);
         }
+
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+
+    }
+
+
+    private static final int RC_LOCATION_PERM = 123;
+
+    @AfterPermissionGranted(RC_LOCATION_PERM)
+    public void locationTask() {
+        if (EasyPermissions.hasPermissions(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+            // Have permission, do the thing!
+            //开始定位
+            mLocationClient.start();
+        } else {
+            // Ask for one permission
+            EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.rationale_location),
+                    RC_LOCATION_PERM,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION);
+
+            tv_location.setText("四川");
+        }
+
+
+    }
+
+    @Override
+    public void onReceiveLocation(BDLocation bdLocation) {
+
+        locationArea = bdLocation.getProvince();
+        locationCity = bdLocation.getCity();
+
+        tv_location.setText(locationArea);
+
+
+    }
+
+    @Override
+    public void initEvent() {
+
+        //热门城市
+        hotCities = new ArrayList<>();
+        hotCities.add(new HotCity("四川", "四川", null));
+        hotCities.add(new HotCity("重庆", "重庆", null));
+
+        locationTask();
+
 
     }
 
@@ -352,12 +405,11 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                         .setFragmentManager(getFragmentManager())
                         .enableAnimation(true)
                         .setAnimationStyle(R.style.CustomAnim)
-                        .setLocatedCity(new LocatedCity("成都", "浙江", "101210101"))
                         .setHotCities(hotCities)
                         .setOnPickListener(new OnPickListener() {
                             @Override
                             public void onPick(int position, City data) {
-                                tv_location.setText(data == null ? "四川" : String.format("%s", data.getName()));
+                                tv_location.setText(data == null ? locationArea : String.format("%s", data.getName()));
                             }
 
                             @Override
@@ -371,6 +423,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                                                         LocateState.SUCCESS);
                                     }
                                 }, 2000);
+
                             }
                         })
                         .show();
@@ -380,9 +433,4 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
-    @Override
-    public void onReceiveLocation(BDLocation bdLocation) {
-        String city = bdLocation.getCity();
-        Log.d("BDASBDASDA", city);
-    }
 }
