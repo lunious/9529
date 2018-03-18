@@ -232,7 +232,8 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
         locationArea = bdLocation.getProvince();
         locationCity = bdLocation.getCity();
 
-        tv_location.setText(locationArea);
+
+        tv_location.setText(locationArea.substring(0, locationArea.length() - 1));
 
 
     }
