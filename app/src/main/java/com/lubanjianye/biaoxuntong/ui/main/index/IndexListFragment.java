@@ -70,6 +70,7 @@ public class IndexListFragment extends BaseFragment {
 
     Banner indexItemBanner = null;
     private String mTitle = null;
+    private String mDiqu = null;
     private String deviceId = AppSysMgr.getPsuedoUniqueID();
 
 
@@ -190,6 +191,7 @@ public class IndexListFragment extends BaseFragment {
     private void initAdapter() {
 
         mTitle = getArguments().getString("title");
+        mDiqu = getArguments().getString("diqu");
 
         if ("最新标讯".equals(mTitle)) {
             mAdapter = new IndexListAdapter(R.layout.fragment_index_zxbx_item, mDataList);

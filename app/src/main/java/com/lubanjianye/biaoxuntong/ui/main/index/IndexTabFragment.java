@@ -3,7 +3,6 @@ package com.lubanjianye.biaoxuntong.ui.main.index;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
@@ -15,10 +14,6 @@ import android.widget.LinearLayout;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.igexin.sdk.PushManager;
 import com.lubanjianye.biaoxuntong.R;
@@ -32,7 +27,6 @@ import com.lubanjianye.biaoxuntong.ui.citypicker.CityPicker;
 import com.lubanjianye.biaoxuntong.ui.citypicker.adapter.OnPickListener;
 import com.lubanjianye.biaoxuntong.ui.citypicker.model.City;
 import com.lubanjianye.biaoxuntong.ui.citypicker.model.HotCity;
-import com.lubanjianye.biaoxuntong.ui.citypicker.model.LocateState;
 import com.lubanjianye.biaoxuntong.ui.citypicker.model.LocatedCity;
 import com.lubanjianye.biaoxuntong.ui.main.index.search.IndexSearchActivity;
 import com.lubanjianye.biaoxuntong.ui.main.index.sortcolumn.SortColumnActivity;
@@ -53,8 +47,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
 
 import static com.lubanjianye.biaoxuntong.app.BiaoXunTong.getApplicationContext;
 
@@ -67,7 +59,7 @@ import static com.lubanjianye.biaoxuntong.app.BiaoXunTong.getApplicationContext;
  * 描述:     TODO
  */
 
-public class IndexTabFragment extends BaseFragment implements View.OnClickListener, BDLocationListener {
+public class IndexTabFragment extends BaseFragment implements View.OnClickListener {
 
     private SlidingTabLayout indexStlTab = null;
     private ViewPager indexVp = null;
@@ -75,6 +67,9 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
     private ImageView ivAdd = null;
 
     private List<HotCity> hotCities;
+
+    private String mDiqu = "";
+    private String mCity = "";
 
 
     private String clientID = PushManager.getInstance().getClientid(getApplicationContext());
@@ -91,12 +86,6 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
 
     private LinearLayout ll_location = null;
     private AppCompatTextView tv_location = null;
-
-    public LocationClient mLocationClient = null;
-
-    private String locationArea = "";
-
-    private String locationCity = "";
 
 
     @Override
@@ -135,24 +124,27 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
         ll_location.setOnClickListener(this);
 
 
-        //定位相关
-        mLocationClient = new LocationClient(getApplicationContext());
-        //声明LocationClient类
-        mLocationClient.registerLocationListener(this);
-        //注册监听函数
-        LocationClientOption option = new LocationClientOption();
+        //检查有无定位数据
+        String area = (String) AppSharePreferenceMgr.get(getContext(), EventMessage.LOCA_AREA, "");
+        String city = (String) AppSharePreferenceMgr.get(getContext(), EventMessage.LOCA_CITY, "");
 
-        option.setIsNeedAddress(true);
-        //可选，是否需要地址信息，默认为不需要，即参数为false
-        //如果开发者需要获得当前点的地址信息，此处必须为true
-        mLocationClient.setLocOption(option);
-
+        if (!TextUtils.isEmpty(area)) {
+            mDiqu = area;
+            tv_location.setText(mDiqu);
+        } else {
+            mDiqu = "四川";
+            tv_location.setText(mDiqu);
+        }
+        if (!TextUtils.isEmpty(city)) {
+            mCity = city;
+        } else {
+            mCity = "";
+        }
 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void XXXXXX(EventMessage message) {
-
 
         if (EventMessage.LOGIN_SUCCSS.equals(message.getMessage()) || EventMessage.LOGIN_OUT.equals(message.getMessage())
                 || EventMessage.TAB_CHANGE.equals(message.getMessage())) {
@@ -196,57 +188,12 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-
-    }
-
-
-    private static final int RC_LOCATION_PERM = 123;
-
-    @AfterPermissionGranted(RC_LOCATION_PERM)
-    public void locationTask() {
-        if (EasyPermissions.hasPermissions(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-            // Have permission, do the thing!
-            //开始定位
-            mLocationClient.start();
-        } else {
-            // Ask for one permission
-            EasyPermissions.requestPermissions(
-                    this,
-                    getString(R.string.rationale_location),
-                    RC_LOCATION_PERM,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION);
-
-            tv_location.setText("四川");
-        }
-
-
-    }
-
-    @Override
-    public void onReceiveLocation(BDLocation bdLocation) {
-
-        locationArea = bdLocation.getProvince();
-        locationCity = bdLocation.getCity();
-
-
-        tv_location.setText(locationArea.substring(0, locationArea.length() - 1));
-
-
-    }
-
-    @Override
     public void initEvent() {
 
         //热门城市
         hotCities = new ArrayList<>();
         hotCities.add(new HotCity("四川", "四川", null));
         hotCities.add(new HotCity("重庆", "重庆", null));
-
-        locationTask();
 
 
     }
@@ -385,7 +332,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void setUI(List<String> mList) {
-        mAdapter = new IndexFragmentAdapter(getContext(), getFragmentManager(), mList);
+        mAdapter = new IndexFragmentAdapter(getContext(), getFragmentManager(), mList, mDiqu);
         indexVp.setAdapter(mAdapter);
         indexStlTab.setViewPager(indexVp);
         mAdapter.notifyDataSetChanged();
@@ -402,36 +349,75 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                 startActivity(new Intent(getActivity(), SortColumnActivity.class));
                 break;
             case R.id.ll_location:
-                CityPicker.getInstance()
-                        .setFragmentManager(getFragmentManager())
-                        .enableAnimation(true)
-                        .setAnimationStyle(R.style.CustomAnim)
-                        .setHotCities(hotCities)
-                        .setOnPickListener(new OnPickListener() {
-                            @Override
-                            public void onPick(int position, City data) {
-                                tv_location.setText(data == null ? locationArea : String.format("%s", data.getName()));
-                            }
 
-                            @Override
-                            public void onLocate() {
-                                //开始定位，这里模拟一下定位
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        CityPicker.getInstance()
-                                                .locateComplete(new LocatedCity("成都", "广东", "101280601"),
-                                                        LocateState.SUCCESS);
+                if (!TextUtils.isEmpty(mCity)) {
+                    CityPicker.getInstance()
+                            .setFragmentManager(getFragmentManager())
+                            .enableAnimation(true)
+                            .setAnimationStyle(R.style.CustomAnim)
+                            .setLocatedCity(new LocatedCity(mCity, "", ""))
+                            .setHotCities(hotCities)
+                            .setOnPickListener(new OnPickListener() {
+                                @Override
+                                public void onPick(int position, City data) {
+
+                                    if (data != null) {
+                                        tv_location.setText(String.format("%s", data.getName()));
+                                        mDiqu = tv_location.getText().toString().trim();
+                                        requestData();
+                                    } else {
+                                        tv_location.setText(mDiqu);
                                     }
-                                }, 2000);
 
-                            }
-                        })
-                        .show();
+
+                                }
+
+                                @Override
+                                public void onLocate() {
+                                    //开始定位，这里模拟一下定位
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            ToastUtil.shortToast(getApplicationContext(), "定位失败，请检查定位权限");
+                                        }
+                                    }, 2000);
+
+                                }
+                            })
+                            .show();
+                } else {
+                    CityPicker.getInstance()
+                            .setFragmentManager(getFragmentManager())
+                            .enableAnimation(true)
+                            .setAnimationStyle(R.style.CustomAnim)
+                            .setHotCities(hotCities)
+                            .setOnPickListener(new OnPickListener() {
+                                @Override
+                                public void onPick(int position, City data) {
+                                    tv_location.setText(data == null ? "" : String.format("%s", data.getName()));
+                                }
+
+                                @Override
+                                public void onLocate() {
+                                    //开始定位，这里模拟一下定位
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            ToastUtil.shortToast(getApplicationContext(), "定位失败，请检查定位权限");
+                                        }
+                                    }, 2000);
+
+                                }
+                            })
+                            .show();
+                }
+
+
                 break;
             default:
                 break;
         }
     }
+
 
 }

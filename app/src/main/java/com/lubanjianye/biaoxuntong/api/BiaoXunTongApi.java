@@ -16,6 +16,8 @@ public abstract class BiaoXunTongApi {
 
     public static final String BASEURL = "http://api.lubanjianye.com/";
 
+    public static final String TEST = "http://192.168.0.50:8081/";
+
     /**
      * 变更公告
      */

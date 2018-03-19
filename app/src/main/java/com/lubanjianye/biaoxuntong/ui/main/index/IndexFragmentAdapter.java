@@ -31,11 +31,14 @@ public class IndexFragmentAdapter extends FragmentPagerAdapter {
     private Map<String, Integer> IdsMap = new HashMap<>();
     private List<String> preIds = new ArrayList<>();
 
-    public IndexFragmentAdapter(Context context, FragmentManager fm, List<String> titles) {
+    private String mDiqu = "";
+
+    public IndexFragmentAdapter(Context context, FragmentManager fm, List<String> titles, String diqu) {
         super(fm);
 
         this.context = context;
         this.titles = titles;
+        this.mDiqu = diqu;
         for (String title : titles) {
             if (!IdsMap.containsKey(title)) {
                 IdsMap.put(title, id++);
@@ -52,6 +55,7 @@ public class IndexFragmentAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
         bundle.putString("title", titles.get(position));
+        bundle.putString("diqu", mDiqu);
         if ("行业资讯".equals(titles.get(position))) {
 
             IndexHyzxListFragment columnFragment = new IndexHyzxListFragment();
