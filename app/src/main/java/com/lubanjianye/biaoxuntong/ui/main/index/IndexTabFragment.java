@@ -148,7 +148,13 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
 
         if (EventMessage.LOGIN_SUCCSS.equals(message.getMessage()) || EventMessage.LOGIN_OUT.equals(message.getMessage())
                 || EventMessage.TAB_CHANGE.equals(message.getMessage())) {
+
             //更新UI
+            if (indexStlTab != null) {
+                indexStlTab.setCurrentTab(0);
+                indexStlTab.setViewPager(indexVp);
+                indexStlTab.notifyDataSetChanged();
+            }
             requestData();
         }
 
@@ -364,6 +370,11 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                                     if (data != null) {
                                         tv_location.setText(String.format("%s", data.getName()));
                                         mDiqu = tv_location.getText().toString().trim();
+                                        if (indexStlTab != null) {
+                                            indexStlTab.setCurrentTab(0);
+                                            indexStlTab.setViewPager(indexVp);
+                                            indexStlTab.notifyDataSetChanged();
+                                        }
                                         requestData();
                                     } else {
                                         tv_location.setText(mDiqu);
