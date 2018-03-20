@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:paddingLeft="@dimen/d2"
-                android:text=""
+                android:text="四川"
                 android:textColor="@color/main_status_white"
                 android:textSize="@dimen/d14" />
 

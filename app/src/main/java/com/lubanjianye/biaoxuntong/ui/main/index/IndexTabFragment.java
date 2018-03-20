@@ -21,6 +21,7 @@ import com.baidu.location.LocationClientOption;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.igexin.sdk.PushManager;
 import com.lubanjianye.biaoxuntong.R;
+import com.lubanjianye.biaoxuntong.app.BiaoXunTong;
 import com.lubanjianye.biaoxuntong.base.BaseFragment;
 import com.lubanjianye.biaoxuntong.database.DatabaseManager;
 import com.lubanjianye.biaoxuntong.database.UserProfile;
@@ -66,7 +67,7 @@ import static com.lubanjianye.biaoxuntong.app.BiaoXunTong.getApplicationContext;
  * 描述:     TODO
  */
 
-public class IndexTabFragment extends BaseFragment implements View.OnClickListener ,BDLocationListener, EasyPermissions.PermissionCallbacks {
+public class IndexTabFragment extends BaseFragment implements View.OnClickListener, BDLocationListener, EasyPermissions.PermissionCallbacks {
 
     private SlidingTabLayout indexStlTab = null;
     private ViewPager indexVp = null;
@@ -75,15 +76,11 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
 
     private List<HotCity> hotCities;
 
-    private String mDiqu = "";
-    private String mCity = "";
-
 
     public LocationClient mLocationClient = null;
 
     private String locationArea = "";
-
-    private String locationCity = "";
+    private String mDiqu = "";
 
 
     private String clientID = PushManager.getInstance().getClientid(getApplicationContext());
@@ -149,6 +146,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
         tv_location = getView().findViewById(R.id.tv_location);
         ll_location.setOnClickListener(this);
 
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -208,6 +206,15 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
         hotCities = new ArrayList<>();
         hotCities.add(new HotCity("四川", "四川", null));
         hotCities.add(new HotCity("重庆", "重庆", null));
+
+
+        BiaoXunTong.getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //检查定位
+                locationTask();
+            }
+        }, 4000);
 
 
     }
@@ -346,10 +353,11 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void setUI(List<String> mList) {
-        mAdapter = new IndexFragmentAdapter(getContext(), getFragmentManager(), mList, mDiqu);
+        mAdapter = new IndexFragmentAdapter(getContext(), getFragmentManager(), mList, locationArea);
         indexVp.setAdapter(mAdapter);
         indexStlTab.setViewPager(indexVp);
         mAdapter.notifyDataSetChanged();
+
     }
 
 
@@ -364,12 +372,12 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.ll_location:
 
-                if (!TextUtils.isEmpty(mCity)) {
+                if (!TextUtils.isEmpty(locationArea)) {
                     CityPicker.getInstance()
                             .setFragmentManager(getFragmentManager())
                             .enableAnimation(true)
                             .setAnimationStyle(R.style.CustomAnim)
-                            .setLocatedCity(new LocatedCity(mCity, "", ""))
+                            .setLocatedCity(new LocatedCity(locationArea, "", ""))
                             .setHotCities(hotCities)
                             .setOnPickListener(new OnPickListener() {
                                 @Override
@@ -385,7 +393,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                                         }
                                         requestData();
                                     } else {
-                                        tv_location.setText(mDiqu);
+                                        tv_location.setText("四川");
                                     }
 
 
@@ -454,6 +462,8 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                     RC_LOCATION_PERM,
                     android.Manifest.permission.ACCESS_FINE_LOCATION);
 
+            mLocationClient.start();
+
         }
 
 
@@ -471,10 +481,10 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onReceiveLocation(BDLocation bdLocation) {
         String province = bdLocation.getProvince();
-        String city = bdLocation.getCity();
-
         locationArea = province.substring(0, province.length() - 1);
-        locationCity = city.substring(0, city.length() - 1);
+
+        tv_location.setText(locationArea);
+
     }
 
     @Override
