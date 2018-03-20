@@ -8,6 +8,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 
 import com.alibaba.fastjson.JSON;
@@ -224,7 +225,7 @@ public class YzmLoginFragment extends BaseFragment implements View.OnClickListen
 
         if (!TextUtils.isEmpty(password) && !TextUtils.isEmpty(username)) {
             //登录
-
+            promptDialog.showLoading("正在登陆");
             OkGo.<String>post(BiaoXunTongApi.URL_FASTLOGIN)
                     .params("mobile", username)
                     .params("code", username + "_" + password)
@@ -235,6 +236,7 @@ public class YzmLoginFragment extends BaseFragment implements View.OnClickListen
                             final String status = profileJson.getString("status");
                             final String message = profileJson.getString("message");
                             if ("200".equals(status)) {
+                                promptDialog.dismissImmediately();
                                 if (mTimer != null) {
                                     mTimer.onFinish();
                                     mTimer.cancel();
@@ -247,7 +249,8 @@ public class YzmLoginFragment extends BaseFragment implements View.OnClickListen
                                 nickName = userInfo.getString("nickName");
                                 imageUrl = null;
 
-                                if (comid != null) {
+
+                                if (!"0".equals(comid)) {
                                     OkGo.<String>post(BiaoXunTongApi.URL_GETCOMPANYNAME)
                                             .params("userId", id)
                                             .params("comId", comid)
@@ -258,22 +261,36 @@ public class YzmLoginFragment extends BaseFragment implements View.OnClickListen
                                                     final String status = profileCompany.getString("status");
                                                     final JSONObject data = profileCompany.getJSONObject("data");
 
+
                                                     if ("200".equals(status)) {
                                                         companyName = data.getString("qy");
                                                     } else {
                                                         companyName = null;
                                                     }
+
+                                                    final UserProfile profile = new UserProfile(id, mobile, nickName, token, comid, imageUrl, companyName);
+                                                    DatabaseManager.getInstance().getDao().insert(profile);
+                                                    AppSharePreferenceMgr.put(getContext(), EventMessage.LOGIN_SUCCSS, true);
+                                                    EventBus.getDefault().post(new EventMessage(EventMessage.LOGIN_SUCCSS));
+                                                    promptDialog.dismissImmediately();
+                                                    getActivity().onBackPressed();
+                                                    ToastUtil.shortBottonToast(getContext(), "登陆成功");
+
                                                 }
                                             });
 
+
+                                } else {
+                                    final UserProfile profile = new UserProfile(id, mobile, nickName, token, comid, imageUrl, companyName);
+                                    DatabaseManager.getInstance().getDao().insert(profile);
+                                    AppSharePreferenceMgr.put(getContext(), EventMessage.LOGIN_SUCCSS, true);
+                                    EventBus.getDefault().post(new EventMessage(EventMessage.LOGIN_SUCCSS));
+                                    promptDialog.dismissImmediately();
+                                    getActivity().onBackPressed();
+                                    ToastUtil.shortBottonToast(getContext(), "登陆成功");
+
                                 }
 
-                                final UserProfile profile = new UserProfile(id, mobile, nickName, token, comid, imageUrl, companyName);
-                                DatabaseManager.getInstance().getDao().insert(profile);
-                                AppSharePreferenceMgr.put(getContext(), EventMessage.LOGIN_SUCCSS, true);
-                                EventBus.getDefault().post(new EventMessage(EventMessage.LOGIN_SUCCSS));
-                                promptDialog.dismissImmediately();
-                                getActivity().onBackPressed();
                             } else {
                                 ToastUtil.shortBottonToast(getContext(), message);
 

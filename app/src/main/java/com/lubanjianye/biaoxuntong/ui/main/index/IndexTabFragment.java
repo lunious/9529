@@ -3,10 +3,10 @@ package com.lubanjianye.biaoxuntong.ui.main.index;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,6 +14,10 @@ import android.widget.LinearLayout;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.igexin.sdk.PushManager;
 import com.lubanjianye.biaoxuntong.R;
@@ -48,6 +52,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
+
 import static com.lubanjianye.biaoxuntong.app.BiaoXunTong.getApplicationContext;
 
 /**
@@ -59,7 +66,7 @@ import static com.lubanjianye.biaoxuntong.app.BiaoXunTong.getApplicationContext;
  * 描述:     TODO
  */
 
-public class IndexTabFragment extends BaseFragment implements View.OnClickListener {
+public class IndexTabFragment extends BaseFragment implements View.OnClickListener ,BDLocationListener, EasyPermissions.PermissionCallbacks {
 
     private SlidingTabLayout indexStlTab = null;
     private ViewPager indexVp = null;
@@ -70,6 +77,13 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
 
     private String mDiqu = "";
     private String mCity = "";
+
+
+    public LocationClient mLocationClient = null;
+
+    private String locationArea = "";
+
+    private String locationCity = "";
 
 
     private String clientID = PushManager.getInstance().getClientid(getApplicationContext());
@@ -111,6 +125,18 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
         //创建对象
         promptDialog = new PromptDialog(getActivity());
 
+        //定位相关
+        mLocationClient = new LocationClient(getApplicationContext());
+        //声明LocationClient类
+        mLocationClient.registerLocationListener(this);
+        //注册监听函数
+        LocationClientOption option = new LocationClientOption();
+
+        option.setIsNeedAddress(true);
+        //可选，是否需要地址信息，默认为不需要，即参数为false
+        //如果开发者需要获得当前点的地址信息，此处必须为true
+        mLocationClient.setLocOption(option);
+
         indexStlTab = getView().findViewById(R.id.index_stl_tab);
         indexVp = getView().findViewById(R.id.index_vp);
         llSearch = getView().findViewById(R.id.ll_search);
@@ -122,24 +148,6 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
         ll_location = getView().findViewById(R.id.ll_location);
         tv_location = getView().findViewById(R.id.tv_location);
         ll_location.setOnClickListener(this);
-
-
-        //检查有无定位数据
-        String area = (String) AppSharePreferenceMgr.get(getContext(), EventMessage.LOCA_AREA, "");
-        String city = (String) AppSharePreferenceMgr.get(getContext(), EventMessage.LOCA_CITY, "");
-
-        if (!TextUtils.isEmpty(area)) {
-            mDiqu = area;
-            tv_location.setText(mDiqu);
-        } else {
-            mDiqu = "四川";
-            tv_location.setText(mDiqu);
-        }
-        if (!TextUtils.isEmpty(city)) {
-            mCity = city;
-        } else {
-            mCity = "";
-        }
 
     }
 
@@ -430,5 +438,52 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
+    private static final int RC_LOCATION_PERM = 123;
 
+    @AfterPermissionGranted(RC_LOCATION_PERM)
+    public void locationTask() {
+        if (EasyPermissions.hasPermissions(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+            // Have permission, do the thing!
+            //开始定位
+            mLocationClient.start();
+        } else {
+            // Ask for one permission
+            EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.rationale_location),
+                    RC_LOCATION_PERM,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION);
+
+        }
+
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+
+    }
+
+
+    @Override
+    public void onReceiveLocation(BDLocation bdLocation) {
+        String province = bdLocation.getProvince();
+        String city = bdLocation.getCity();
+
+        locationArea = province.substring(0, province.length() - 1);
+        locationCity = city.substring(0, city.length() - 1);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+
+    }
 }
