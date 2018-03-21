@@ -376,6 +376,12 @@ public class CollectionTabFragment extends BaseFragment implements View.OnClickL
 
     public void requestData(final boolean isRefresh) {
 
+        String area = "";
+
+        if (AppSharePreferenceMgr.contains(getContext(),EventMessage.LOCA_AREA)){
+            area = (String) AppSharePreferenceMgr.get(getContext(),EventMessage.LOCA_AREA,"");
+        }
+
         if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOGIN_SUCCSS)) {
             llShow.setVisibility(View.GONE);
             List<UserProfile> users = DatabaseManager.getInstance().getDao().loadAll();
@@ -388,6 +394,7 @@ public class CollectionTabFragment extends BaseFragment implements View.OnClickL
                 OkGo.<String>post(BiaoXunTongApi.URL_GETCOLLECTIONLIST)
                         .params("userid", id)
                         .params("page", page)
+                        .params("diqu",area)
                         .params("size", 10)
                         .cacheKey("collect_cache" + id)
                         .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
@@ -438,6 +445,7 @@ public class CollectionTabFragment extends BaseFragment implements View.OnClickL
                 OkGo.<String>post(BiaoXunTongApi.URL_GETCOLLECTIONLIST)
                         .params("userid", id)
                         .params("page", page)
+                        .params("diqu",area)
                         .params("size", 10)
                         .cacheMode(CacheMode.NO_CACHE)
                         .execute(new StringCallback() {

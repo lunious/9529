@@ -66,6 +66,9 @@ public class SortColumnFragment extends BaseFragment implements View.OnClickList
 
     private int stu = 0;
 
+
+    private String mDiqu = "";
+
     @Override
     public Object setLayout() {
         return R.layout.fragment_column;
@@ -328,6 +331,11 @@ public class SortColumnFragment extends BaseFragment implements View.OnClickList
 
     public void requestData() {
 
+
+        if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOCA_AREA)) {
+            mDiqu = (String) AppSharePreferenceMgr.get(getContext(), EventMessage.LOCA_AREA, "");
+        }
+
         if (!NetUtil.isNetworkConnected(getContext())) {
             ToastUtil.shortToast(getContext(), "网络出错，请检查网络设置！");
         } else {
@@ -340,6 +348,7 @@ public class SortColumnFragment extends BaseFragment implements View.OnClickList
 
                 OkGo.<String>post(BiaoXunTongApi.URL_GETALLTAB)
                         .params("userId", userId)
+                        .params("diqu", mDiqu)
                         .execute(new StringCallback() {
                             @Override
                             public void onSuccess(Response<String> response) {
@@ -388,6 +397,7 @@ public class SortColumnFragment extends BaseFragment implements View.OnClickList
             } else {
 
                 OkGo.<String>post(BiaoXunTongApi.URL_GETALLTAB)
+                        .params("diqu", mDiqu)
                         .execute(new StringCallback() {
                             @Override
                             public void onSuccess(Response<String> response) {
@@ -473,7 +483,7 @@ public class SortColumnFragment extends BaseFragment implements View.OnClickList
             SortColumnBean bean = new SortColumnBean();
             JSONObject list = data.getJSONObject(i);
             bean.setId(list.getInteger("id"));
-            bean.setName("+"+list.getString("name"));
+            bean.setName("+" + list.getString("name"));
             bean.setShowDele(false);
             bean.setChangeColo(false);
             mData1.add(bean);
@@ -488,7 +498,7 @@ public class SortColumnFragment extends BaseFragment implements View.OnClickList
             SortColumnBean bean = new SortColumnBean();
             JSONObject list = data.getJSONObject(i);
             bean.setId(list.getInteger("id"));
-            bean.setName("+"+list.getString("name"));
+            bean.setName("+" + list.getString("name"));
             bean.setShowDele(false);
             bean.setChangeColo(false);
             mData2.add(bean);

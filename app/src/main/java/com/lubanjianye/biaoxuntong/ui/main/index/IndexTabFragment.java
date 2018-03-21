@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -96,6 +97,8 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
     private LinearLayout ll_location = null;
     private AppCompatTextView tv_location = null;
 
+    private String locationArea = "";
+
 
     @Override
     public Object setLayout() {
@@ -145,7 +148,13 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
         ll_location.setOnClickListener(this);
 
 
-        tv_location.setText("四川");
+        if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOCA_AREA)) {
+            String area = (String) AppSharePreferenceMgr.get(getContext(), EventMessage.LOCA_AREA, "");
+            tv_location.setText(area);
+
+        } else {
+            tv_location.setText("四川");
+        }
 
 
     }
@@ -227,6 +236,9 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
         String mDiqu = tv_location.getText().toString();
 
         Log.d("DASBDASDASD", mDiqu);
+
+        //保存地区
+        AppSharePreferenceMgr.put(getContext(), EventMessage.LOCA_AREA, mDiqu);
 
         if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOGIN_SUCCSS)) {
             //得到用户userId
@@ -322,46 +334,92 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                 startActivity(new Intent(getActivity(), SortColumnActivity.class));
                 break;
             case R.id.ll_location:
-                CityPicker.getInstance()
-                        .setFragmentManager(getFragmentManager())
-                        .enableAnimation(true)
-                        .setAnimationStyle(R.style.CustomAnim)
-                        .setLocatedCity(new LocatedCity(tv_location.getText().toString().trim(), "", ""))
-                        .setHotCities(hotCities)
-                        .setOnPickListener(new OnPickListener() {
-                            @Override
-                            public void onPick(int position, City data) {
+
+                if (!TextUtils.isEmpty(locationArea)) {
+                    CityPicker.getInstance()
+                            .setFragmentManager(getFragmentManager())
+                            .enableAnimation(true)
+                            .setAnimationStyle(R.style.CustomAnim)
+                            .setLocatedCity(new LocatedCity(locationArea, "", ""))
+                            .setHotCities(hotCities)
+                            .setOnPickListener(new OnPickListener() {
+                                @Override
+                                public void onPick(int position, City data) {
 
 
-                                if (data != null) {
-                                    tv_location.setText(String.format("%s", data.getName()));
-                                    if (indexStlTab != null) {
-                                        indexStlTab.setCurrentTab(0);
-                                        indexStlTab.setViewPager(indexVp);
-                                        indexStlTab.notifyDataSetChanged();
+                                    if (data != null) {
+                                        tv_location.setText(String.format("%s", data.getName()));
+                                        if (indexStlTab != null) {
+                                            indexStlTab.setCurrentTab(0);
+                                            indexStlTab.setViewPager(indexVp);
+                                            indexStlTab.notifyDataSetChanged();
+                                        }
+                                        requestData();
+                                        EventBus.getDefault().post(new EventMessage(EventMessage.LOCA_AREA_CHANGE));
+
+                                    } else {
+                                        tv_location.setText(tv_location.getText().toString());
                                     }
-                                    requestData();
 
-                                } else {
-                                    tv_location.setText("四川");
+
                                 }
 
+                                @Override
+                                public void onLocate() {
+                                    //开始定位，这里模拟一下定位
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            ToastUtil.shortToast(getApplicationContext(), "定位失败，请检查定位权限");
+                                        }
+                                    }, 3000);
 
-                            }
+                                }
+                            })
+                            .show();
+                } else {
+                    CityPicker.getInstance()
+                            .setFragmentManager(getFragmentManager())
+                            .enableAnimation(true)
+                            .setAnimationStyle(R.style.CustomAnim)
+                            .setHotCities(hotCities)
+                            .setOnPickListener(new OnPickListener() {
+                                @Override
+                                public void onPick(int position, City data) {
 
-                            @Override
-                            public void onLocate() {
-                                //开始定位，这里模拟一下定位
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        ToastUtil.shortToast(getApplicationContext(), "定位失败，请检查定位权限");
+
+                                    if (data != null) {
+                                        tv_location.setText(String.format("%s", data.getName()));
+                                        if (indexStlTab != null) {
+                                            indexStlTab.setCurrentTab(0);
+                                            indexStlTab.setViewPager(indexVp);
+                                            indexStlTab.notifyDataSetChanged();
+                                        }
+                                        requestData();
+                                        EventBus.getDefault().post(new EventMessage(EventMessage.LOCA_AREA_CHANGE));
+
+
+                                    } else {
+                                        tv_location.setText(tv_location.getText().toString());
                                     }
-                                }, 2000);
 
-                            }
-                        })
-                        .show();
+
+                                }
+
+                                @Override
+                                public void onLocate() {
+                                    //开始定位，这里模拟一下定位
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            ToastUtil.shortToast(getApplicationContext(), "定位失败，请检查定位权限");
+                                        }
+                                    }, 3000);
+
+                                }
+                            })
+                            .show();
+                }
 
 
                 break;
@@ -403,44 +461,46 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onReceiveLocation(BDLocation bdLocation) {
         String province = bdLocation.getProvince();
-//        locationArea = province.substring(0, province.length() - 1);
+        locationArea = province.substring(0, province.length() - 1);
 
-//        if (mDiqu.equals(locationArea)) {
-//            ToastUtil.shortToast(getContext(), "地区相同，不需要切换");
-//            AppSharePreferenceMgr.put(getContext(), EventMessage.LOCA_AREA, locationArea);
-//        } else {
-//            //是否切换地区
-//            final PromptButton cancel = new PromptButton("取      消", new PromptButtonListener() {
-//                @Override
-//                public void onClick(PromptButton button) {
-//
-//                }
-//            });
-//            cancel.setTextColor(getResources().getColor(R.color.main_status_yellow));
-//            cancel.setTextSize(16);
-//
-//            final PromptButton sure = new PromptButton("切      换", new PromptButtonListener() {
-//                @Override
-//                public void onClick(PromptButton button) {
-//                    //确认切换地区，刷新数据
-//                    AppSharePreferenceMgr.put(getContext(), EventMessage.LOCA_AREA, locationArea);
-//                    tv_location.setText(locationArea);
-//
-//                    //更新UI
-//                    if (indexStlTab != null) {
-//                        indexStlTab.setCurrentTab(0);
-//                        indexStlTab.setViewPager(indexVp);
-//                        indexStlTab.notifyDataSetChanged();
-//                    }
-//                    requestData();
-//                }
-//            });
-//            sure.setTextColor(getResources().getColor(R.color.main_status_blue));
-//            sure.setTextSize(16);
-//            promptDialog.getAlertDefaultBuilder().withAnim(true).cancleAble(false).touchAble(false)
-//                    .round(8).loadingDuration(200);
-//            promptDialog.showWarnAlert("当前定位为" + locationArea + "," + "是否切换到" + locationArea + "?", cancel, sure, true);
-//        }
+
+        String area = tv_location.getText().toString();
+
+        if (!area.equals(locationArea)) {
+            //是否切换地区
+            final PromptButton cancel = new PromptButton("取      消", new PromptButtonListener() {
+                @Override
+                public void onClick(PromptButton button) {
+
+                }
+            });
+            cancel.setTextColor(getResources().getColor(R.color.main_status_yellow));
+            cancel.setTextSize(16);
+
+            final PromptButton sure = new PromptButton("切      换", new PromptButtonListener() {
+                @Override
+                public void onClick(PromptButton button) {
+                    //确认切换地区，刷新数据
+                    tv_location.setText(locationArea);
+
+                    //更新UI
+                    if (indexStlTab != null) {
+                        indexStlTab.setCurrentTab(0);
+                        indexStlTab.setViewPager(indexVp);
+                        indexStlTab.notifyDataSetChanged();
+                    }
+                    requestData();
+
+                    AppSharePreferenceMgr.put(getContext(), EventMessage.LOCA_AREA, tv_location.getText().toString());
+                    EventBus.getDefault().post(new EventMessage(EventMessage.LOCA_AREA_CHANGE));
+                }
+            });
+            sure.setTextColor(getResources().getColor(R.color.main_status_blue));
+            sure.setTextSize(16);
+            promptDialog.getAlertDefaultBuilder().withAnim(true).cancleAble(false).touchAble(false)
+                    .round(8).loadingDuration(200);
+            promptDialog.showWarnAlert("当前定位为" + locationArea + "," + "是否切换到" + locationArea + "?", cancel, sure, true);
+        }
 
     }
 

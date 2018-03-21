@@ -21,6 +21,8 @@ public class EventMessage {
 
     public static final String LOCA_AREA = "loca_area";
 
+    public static final String LOCA_AREA_CHANGE = "loca_area_change";
+
 
     public final String message;
 

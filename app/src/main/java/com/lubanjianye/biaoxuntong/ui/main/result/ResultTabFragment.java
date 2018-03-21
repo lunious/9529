@@ -1,16 +1,13 @@
 package com.lubanjianye.biaoxuntong.ui.main.result;
 
 
-import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import com.flyco.tablayout.SlidingTabLayout;
 import com.lubanjianye.biaoxuntong.R;
 import com.lubanjianye.biaoxuntong.base.BaseFragment;
-import com.lubanjianye.biaoxuntong.ui.message.MessageActivity;
 
 import java.util.ArrayList;
 import java.util.List;

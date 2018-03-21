@@ -38,6 +38,10 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -163,9 +167,32 @@ public class ResultListFragment extends BaseFragment {
 
     @Override
     public void initView() {
+        //注册EventBus
+        EventBus.getDefault().register(this);
+
         resultRecycler = getView().findViewById(R.id.result_recycler);
         resultRefresh = getView().findViewById(R.id.result_refresh);
         loadingStatus = getView().findViewById(R.id.result_list_status_view);
+
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        //取消注册EventBus
+        EventBus.getDefault().unregister(this);
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void XXXXXX(EventMessage message) {
+
+        if (EventMessage.LOCA_AREA_CHANGE.equals(message.getMessage())) {
+
+            requestData(true);
+        }
 
 
     }
@@ -223,8 +250,14 @@ public class ResultListFragment extends BaseFragment {
     }
 
 
+    private String mDiqu = "";
+
     public void requestData(final boolean isRefresh) {
 
+
+        if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOCA_AREA)) {
+            mDiqu = (String) AppSharePreferenceMgr.get(getContext(), EventMessage.LOCA_AREA, "");
+        }
 
         if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOGIN_SUCCSS)) {
             //已登录的数据请求
@@ -240,10 +273,11 @@ public class ResultListFragment extends BaseFragment {
                         .params("type", mType)
                         .params("userid", id)
                         .params("page", page)
+                        .params("diqu", mDiqu)
                         .params("size", 10)
                         .params("deviceId", deviceId)
-                        .cacheKey("result_login_cache" + mTitle)
-                        .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                        .cacheKey("result_login_cache" + mTitle + mDiqu)
+                        .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                         .cacheTime(3600 * 72000)
                         .execute(new StringCallback() {
                             @Override
@@ -302,6 +336,7 @@ public class ResultListFragment extends BaseFragment {
                         .params("type", mType)
                         .params("userid", id)
                         .params("page", page)
+                        .params("diqu", mDiqu)
                         .params("size", 10)
                         .params("deviceId", deviceId)
                         .execute(new StringCallback() {
@@ -339,9 +374,10 @@ public class ResultListFragment extends BaseFragment {
                         .params("type", mType)
                         .params("page", page)
                         .params("size", 10)
+                        .params("diqu", mDiqu)
                         .params("deviceId", deviceId)
-                        .cacheKey("result_no_login_cache" + mTitle)
-                        .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                        .cacheKey("result_no_login_cache" + mTitle + mDiqu)
+                        .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                         .cacheTime(3600 * 72000)
                         .execute(new StringCallback() {
                             @Override
@@ -395,6 +431,7 @@ public class ResultListFragment extends BaseFragment {
                 OkGo.<String>post(BiaoXunTongApi.URL_GETRESULTLIST)
                         .params("type", mType)
                         .params("page", page)
+                        .params("diqu", mDiqu)
                         .params("size", 10)
                         .params("deviceId", deviceId)
                         .execute(new StringCallback() {
