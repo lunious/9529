@@ -33,7 +33,7 @@
                 android:layout_height="@dimen/d20"
                 android:layout_gravity="center"
                 android:background="#00ffffff"
-                android:src="@mipmap/white_back" />
+                android:src="@mipmap/btn_back" />
 
         </LinearLayout>
 

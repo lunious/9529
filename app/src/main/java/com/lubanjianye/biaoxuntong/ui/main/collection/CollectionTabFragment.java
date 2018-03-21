@@ -20,6 +20,7 @@ import com.lubanjianye.biaoxuntong.bean.CollectionListBean;
 import com.lubanjianye.biaoxuntong.database.DatabaseManager;
 import com.lubanjianye.biaoxuntong.database.UserProfile;
 import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
+import com.lubanjianye.biaoxuntong.ui.message.MessageActivity;
 import com.lubanjianye.biaoxuntong.ui.view.loadmore.CustomLoadMoreView;
 import com.lubanjianye.biaoxuntong.api.BiaoXunTongApi;
 import com.lubanjianye.biaoxuntong.sign.SignInActivity;
@@ -68,6 +69,7 @@ import java.util.List;
 public class CollectionTabFragment extends BaseFragment implements View.OnClickListener {
 
     private AppCompatTextView mainBarName = null;
+    private LinearLayout llMessage = null;
     private AppCompatButton btnToLogin = null;
     private LinearLayout llShow = null;
     private SwipeMenuRecyclerView collectRecycler = null;
@@ -135,6 +137,7 @@ public class CollectionTabFragment extends BaseFragment implements View.OnClickL
         EventBus.getDefault().register(this);
 
         mainBarName = getView().findViewById(R.id.main_bar_name);
+        llMessage = getView().findViewById(R.id.ll_message);
         btnToLogin = getView().findViewById(R.id.btn_to_login);
         llShow = getView().findViewById(R.id.ll_show);
         collectRecycler = getView().findViewById(R.id.collect_recycler);
@@ -142,6 +145,7 @@ public class CollectionTabFragment extends BaseFragment implements View.OnClickL
         loadingStatus = getView().findViewById(R.id.collection_list_status_view);
 
         btnToLogin.setOnClickListener(this);
+        llMessage.setOnClickListener(this);
 
 
     }
@@ -150,6 +154,7 @@ public class CollectionTabFragment extends BaseFragment implements View.OnClickL
     public void initData() {
         mainBarName.setVisibility(View.VISIBLE);
         mainBarName.setText("我的收藏");
+        llMessage.setVisibility(View.VISIBLE);
 
     }
 
@@ -187,6 +192,10 @@ public class CollectionTabFragment extends BaseFragment implements View.OnClickL
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.ll_message:
+                //跳到消息中心
+                startActivity(new Intent(getContext(), MessageActivity.class));
+                break;
             case R.id.btn_to_login:
                 //未登录去登陆
                 startActivity(new Intent(getActivity(), SignInActivity.class));
@@ -402,12 +411,10 @@ public class CollectionTabFragment extends BaseFragment implements View.OnClickL
                                 if (array.size() > 0) {
                                     page = 2;
                                     setData(isRefresh, array, nextPage);
-                                    mainBarName.setText("我的收藏(" + "共" + count + "条)");
                                 } else {
                                     //TODO 内容为空的处理
                                     loadingStatus.showEmpty();
                                     collectRefresh.setEnableRefresh(false);
-                                    mainBarName.setText("我的收藏(" + "共" + count + "条)");
                                 }
                             }
 
@@ -423,12 +430,10 @@ public class CollectionTabFragment extends BaseFragment implements View.OnClickL
 
                                     if (array.size() > 0) {
                                         setData(isRefresh, array, nextPage);
-                                        mainBarName.setText("我的收藏(" + "共" + count + "条)");
                                     } else {
                                         //TODO 内容为空的处理
                                         loadingStatus.showEmpty();
                                         collectRefresh.setEnableRefresh(false);
-                                        mainBarName.setText("我的收藏(" + "共" + count + "条)");
                                     }
                                     isInitCache = true;
 
@@ -453,12 +458,10 @@ public class CollectionTabFragment extends BaseFragment implements View.OnClickL
 
                                 if (array.size() > 0) {
                                     setData(isRefresh, array, nextPage);
-                                    mainBarName.setText("我的收藏(" + "共" + count + "条)");
                                 } else {
                                     //TODO 内容为空的处理
                                     loadingStatus.showEmpty();
                                     collectRefresh.setEnableRefresh(false);
-                                    mainBarName.setText("我的收藏(" + "共" + count + "条)");
                                 }
                             }
                         });

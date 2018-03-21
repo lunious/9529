@@ -24,7 +24,7 @@
             android:layout_height="@dimen/d20"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:src="@mipmap/white_back" />
+            android:src="@mipmap/btn_back" />
 
         <LinearLayout
             android:id="@+id/ll_search"

@@ -5,10 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/status_bar_height"
-        android:background="@color/main_theme_color" />
+    <include layout="@layout/fragment_main_bar" />
 
 
     <FrameLayout
@@ -19,7 +16,7 @@
         <RelativeLayout
             android:id="@+id/rl_login"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/d180"
+            android:layout_height="@dimen/d140"
             android:background="@mipmap/avatar_bg"
             android:visibility="invisible">
 
@@ -29,15 +26,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/d8"
-                    android:gravity="center"
-                    android:text="我的企业"
-                    android:textColor="@color/main_status_white"
-                    android:textSize="@dimen/d16" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -97,26 +85,15 @@
         <RelativeLayout
             android:id="@+id/rl_no_login"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/d180"
+            android:layout_height="@dimen/d140"
             android:background="@mipmap/avatar_bg"
             android:visibility="invisible">
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/atv_me"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/d18"
-                android:gravity="center"
-                android:text="我"
-                android:textColor="@color/main_status_white"
-                android:textSize="@dimen/d14"
-                android:visibility="invisible" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/img_default_avatar"
                 android:layout_width="@dimen/d64"
                 android:layout_height="@dimen/d64"
-                android:layout_below="@+id/atv_me"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/d2"
                 android:src="@mipmap/widget_default_face"

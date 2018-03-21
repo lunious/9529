@@ -300,6 +300,12 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
+            android:name=".ui.message.MessageActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.Main"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
             android:name=".ui.media.SelectImageActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.Main"
