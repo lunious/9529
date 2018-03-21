@@ -435,6 +435,12 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                                 public void onPick(int position, City data) {
                                     tv_location.setText(data == null ? mDiqu : String.format("%s", data.getName()));
 
+                                    //更新UI
+                                    if (indexStlTab != null) {
+                                        indexStlTab.setCurrentTab(0);
+                                        indexStlTab.setViewPager(indexVp);
+                                        indexStlTab.notifyDataSetChanged();
+                                    }
                                     requestData();
                                 }
 
@@ -517,6 +523,12 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                     AppSharePreferenceMgr.put(getContext(), EventMessage.LOCA_AREA, locationArea);
                     tv_location.setText(locationArea);
 
+                    //更新UI
+                    if (indexStlTab != null) {
+                        indexStlTab.setCurrentTab(0);
+                        indexStlTab.setViewPager(indexVp);
+                        indexStlTab.notifyDataSetChanged();
+                    }
                     requestData();
                 }
             });
@@ -538,5 +550,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
         Log.d("AJSNBDASDA", "拒绝");
+
+        Log.d("HBDAHUBSDASDA", "requestCode==" + requestCode + "\n" + "perms==" + perms.size());
     }
 }
