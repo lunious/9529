@@ -2,11 +2,13 @@ package com.lubanjianye.biaoxuntong.ui.main.index;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -79,9 +81,6 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
 
     public LocationClient mLocationClient = null;
 
-    private String locationArea = "";
-    private String mDiqu = "";
-
 
     private String clientID = PushManager.getInstance().getClientid(getApplicationContext());
 
@@ -94,6 +93,9 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
     private PromptDialog promptDialog;
 
     private boolean isInitCache = false;
+
+    private String locationArea = "";
+    private String mDiqu = "";
 
     private LinearLayout ll_location = null;
     private AppCompatTextView tv_location = null;
@@ -145,6 +147,15 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
         ll_location = getView().findViewById(R.id.ll_location);
         tv_location = getView().findViewById(R.id.tv_location);
         ll_location.setOnClickListener(this);
+
+
+        if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOCA_AREA)) {
+            mDiqu = (String) AppSharePreferenceMgr.get(getContext(), EventMessage.LOCA_AREA, "");
+            tv_location.setText(mDiqu);
+        } else {
+            mDiqu = "重庆";
+            tv_location.setText(mDiqu);
+        }
 
 
     }
@@ -214,7 +225,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                 //检查定位
                 locationTask();
             }
-        }, 4000);
+        }, 2000);
 
 
     }
@@ -383,6 +394,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                                 @Override
                                 public void onPick(int position, City data) {
 
+
                                     if (data != null) {
                                         tv_location.setText(String.format("%s", data.getName()));
                                         mDiqu = tv_location.getText().toString().trim();
@@ -393,7 +405,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                                         }
                                         requestData();
                                     } else {
-                                        tv_location.setText("四川");
+                                        tv_location.setText(mDiqu);
                                     }
 
 
@@ -421,7 +433,9 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                             .setOnPickListener(new OnPickListener() {
                                 @Override
                                 public void onPick(int position, City data) {
-                                    tv_location.setText(data == null ? "" : String.format("%s", data.getName()));
+                                    tv_location.setText(data == null ? mDiqu : String.format("%s", data.getName()));
+
+                                    requestData();
                                 }
 
                                 @Override
@@ -462,8 +476,6 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                     RC_LOCATION_PERM,
                     android.Manifest.permission.ACCESS_FINE_LOCATION);
 
-            mLocationClient.start();
-
         }
 
 
@@ -483,17 +495,48 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
         String province = bdLocation.getProvince();
         locationArea = province.substring(0, province.length() - 1);
 
-        tv_location.setText(locationArea);
+
+        if (mDiqu.equals(locationArea)) {
+            ToastUtil.shortToast(getContext(), "地区相同，不需要切换");
+            AppSharePreferenceMgr.put(getContext(), EventMessage.LOCA_AREA, locationArea);
+        } else {
+            //是否切换地区
+            final PromptButton cancel = new PromptButton("取      消", new PromptButtonListener() {
+                @Override
+                public void onClick(PromptButton button) {
+
+                }
+            });
+            cancel.setTextColor(getResources().getColor(R.color.main_status_yellow));
+            cancel.setTextSize(16);
+
+            final PromptButton sure = new PromptButton("切      换", new PromptButtonListener() {
+                @Override
+                public void onClick(PromptButton button) {
+                    //确认切换地区，刷新数据
+                    AppSharePreferenceMgr.put(getContext(), EventMessage.LOCA_AREA, locationArea);
+                    tv_location.setText(locationArea);
+
+                    requestData();
+                }
+            });
+            sure.setTextColor(getResources().getColor(R.color.main_status_blue));
+            sure.setTextSize(16);
+            promptDialog.getAlertDefaultBuilder().withAnim(true).cancleAble(false).touchAble(false)
+                    .round(8).loadingDuration(200);
+            promptDialog.showWarnAlert("当前定位为" + locationArea + "," + "是否切换到" + locationArea + "?", cancel, sure, true);
+        }
 
     }
 
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-
+        Log.d("AJSNBDASDA", "同意");
+        mLocationClient.start();
     }
 
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-
+        Log.d("AJSNBDASDA", "拒绝");
     }
 }
