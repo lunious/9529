@@ -153,7 +153,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
             mDiqu = (String) AppSharePreferenceMgr.get(getContext(), EventMessage.LOCA_AREA, "");
             tv_location.setText(mDiqu);
         } else {
-            mDiqu = "重庆";
+            mDiqu = "四川";
             tv_location.setText(mDiqu);
         }
 
@@ -397,13 +397,14 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
 
                                     if (data != null) {
                                         tv_location.setText(String.format("%s", data.getName()));
-                                        mDiqu = tv_location.getText().toString().trim();
                                         if (indexStlTab != null) {
                                             indexStlTab.setCurrentTab(0);
                                             indexStlTab.setViewPager(indexVp);
                                             indexStlTab.notifyDataSetChanged();
                                         }
-                                        requestData();
+                                        if (!mDiqu.equals(tv_location.getText().toString().trim())){
+                                            requestData();
+                                        }
                                     } else {
                                         tv_location.setText(mDiqu);
                                     }
@@ -433,15 +434,20 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                             .setOnPickListener(new OnPickListener() {
                                 @Override
                                 public void onPick(int position, City data) {
-                                    tv_location.setText(data == null ? mDiqu : String.format("%s", data.getName()));
-
-                                    //更新UI
-                                    if (indexStlTab != null) {
-                                        indexStlTab.setCurrentTab(0);
-                                        indexStlTab.setViewPager(indexVp);
-                                        indexStlTab.notifyDataSetChanged();
+                                    if (data != null) {
+                                        tv_location.setText(String.format("%s", data.getName()));
+                                        if (indexStlTab != null) {
+                                            indexStlTab.setCurrentTab(0);
+                                            indexStlTab.setViewPager(indexVp);
+                                            indexStlTab.notifyDataSetChanged();
+                                        }
+                                        if (!mDiqu.equals(tv_location.getText().toString().trim())){
+                                            requestData();
+                                        }
+                                    } else {
+                                        tv_location.setText(mDiqu);
                                     }
-                                    requestData();
+
                                 }
 
                                 @Override
