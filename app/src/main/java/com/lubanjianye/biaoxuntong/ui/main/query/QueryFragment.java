@@ -67,7 +67,6 @@ import java.util.List;
 public class QueryFragment extends BaseFragment implements View.OnClickListener {
 
     private AppCompatTextView mainBarName = null;
-    private LinearLayout llMessage = null;
     private EditText etQuery = null;
     private TextView tvQuery = null;
     private TextView tvZzlx = null;
@@ -198,8 +197,6 @@ public class QueryFragment extends BaseFragment implements View.OnClickListener 
     @Override
     public void initView() {
         mainBarName = getView().findViewById(R.id.main_bar_name);
-        llMessage = getView().findViewById(R.id.ll_message);
-        llMessage.setOnClickListener(this);
         etQuery = getView().findViewById(R.id.et_query);
         tvQuery = getView().findViewById(R.id.tv_query);
         tvZzlx = getView().findViewById(R.id.tv_zzlx);
@@ -229,7 +226,6 @@ public class QueryFragment extends BaseFragment implements View.OnClickListener 
     public void initData() {
         mainBarName.setVisibility(View.VISIBLE);
         mainBarName.setText("资质查询");
-        llMessage.setVisibility(View.VISIBLE);
 
         initRecyclerView();
         initAdapter();
@@ -455,10 +451,6 @@ public class QueryFragment extends BaseFragment implements View.OnClickListener 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.ll_message:
-                //跳到消息中心
-                startActivity(new Intent(getContext(), MessageActivity.class));
-                break;
             case R.id.vip_detail:
                 String VipUrl = "http://m.lubanjianye.com/home/index/vipservice.html";
                 Intent intent = new Intent(getActivity(), BrowserActivity.class);

@@ -39,7 +39,7 @@ public class MessageListFragment extends BaseFragment {
     @Override
     public void initData() {
 
-        tv_message.setText(mTitle);
+        tv_message.setText(mTitle + "\n" + "暂无新消息");
 
     }
 

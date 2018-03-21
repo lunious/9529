@@ -69,7 +69,6 @@ import java.util.List;
 public class CollectionTabFragment extends BaseFragment implements View.OnClickListener {
 
     private AppCompatTextView mainBarName = null;
-    private LinearLayout llMessage = null;
     private AppCompatButton btnToLogin = null;
     private LinearLayout llShow = null;
     private SwipeMenuRecyclerView collectRecycler = null;
@@ -137,7 +136,6 @@ public class CollectionTabFragment extends BaseFragment implements View.OnClickL
         EventBus.getDefault().register(this);
 
         mainBarName = getView().findViewById(R.id.main_bar_name);
-        llMessage = getView().findViewById(R.id.ll_message);
         btnToLogin = getView().findViewById(R.id.btn_to_login);
         llShow = getView().findViewById(R.id.ll_show);
         collectRecycler = getView().findViewById(R.id.collect_recycler);
@@ -145,7 +143,6 @@ public class CollectionTabFragment extends BaseFragment implements View.OnClickL
         loadingStatus = getView().findViewById(R.id.collection_list_status_view);
 
         btnToLogin.setOnClickListener(this);
-        llMessage.setOnClickListener(this);
 
 
     }
@@ -154,7 +151,7 @@ public class CollectionTabFragment extends BaseFragment implements View.OnClickL
     public void initData() {
         mainBarName.setVisibility(View.VISIBLE);
         mainBarName.setText("我的收藏");
-        llMessage.setVisibility(View.VISIBLE);
+
 
     }
 
@@ -192,10 +189,6 @@ public class CollectionTabFragment extends BaseFragment implements View.OnClickL
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.ll_message:
-                //跳到消息中心
-                startActivity(new Intent(getContext(), MessageActivity.class));
-                break;
             case R.id.btn_to_login:
                 //未登录去登陆
                 startActivity(new Intent(getActivity(), SignInActivity.class));

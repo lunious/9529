@@ -57,10 +57,21 @@ public class IndexHyzxListFragment extends BaseFragment {
     private int page = 1;
     private boolean isInitCache = false;
 
+    private static String mDiqu = null;
+
     @Override
     public Object setLayout() {
         return R.layout.fragment_index_hyzx;
     }
+
+
+    public static IndexHyzxListFragment getInstance(String diqu) {
+        IndexHyzxListFragment sf = new IndexHyzxListFragment();
+        mDiqu = diqu;
+        return sf;
+
+    }
+
 
     @Override
     public void initView() {
@@ -188,6 +199,7 @@ public class IndexHyzxListFragment extends BaseFragment {
                 OkGo.<String>post(BiaoXunTongApi.URL_GETINDEXHYZXLIST)
                         .params("userid", id)
                         .params("page", page)
+                        .params("diqu", mDiqu)
                         .params("size", 10)
                         .cacheKey("index_htzx_login_cache" + id)
                         .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
@@ -246,6 +258,7 @@ public class IndexHyzxListFragment extends BaseFragment {
                 OkGo.<String>post(BiaoXunTongApi.URL_GETINDEXHYZXLIST)
                         .params("userid", id)
                         .params("page", page)
+                        .params("diqu", mDiqu)
                         .params("size", 10)
                         .execute(new StringCallback() {
                             @Override
@@ -278,6 +291,7 @@ public class IndexHyzxListFragment extends BaseFragment {
                 page = 1;
                 OkGo.<String>post(BiaoXunTongApi.URL_GETINDEXHYZXLIST)
                         .params("page", page)
+                        .params("diqu", mDiqu)
                         .params("size", 10)
                         .execute(new StringCallback() {
                             @Override
@@ -332,6 +346,7 @@ public class IndexHyzxListFragment extends BaseFragment {
             } else {
                 OkGo.<String>post(BiaoXunTongApi.URL_GETINDEXHYZXLIST)
                         .params("page", page)
+                        .params("diqu", mDiqu)
                         .params("size", 10)
                         .execute(new StringCallback() {
                             @Override

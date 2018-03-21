@@ -27,7 +27,6 @@ import java.util.List;
 public class ResultTabFragment extends BaseFragment {
 
     private AppCompatTextView mainBarName = null;
-    private LinearLayout llMessage = null;
     private SlidingTabLayout resulttStlTab = null;
     private ViewPager resultVp = null;
 
@@ -42,23 +41,13 @@ public class ResultTabFragment extends BaseFragment {
     @Override
     public void initView() {
         mainBarName = getView().findViewById(R.id.main_bar_name);
-        llMessage = getView().findViewById(R.id.ll_message);
         resulttStlTab = getView().findViewById(R.id.resultt_stl_tab);
         resultVp = getView().findViewById(R.id.result_vp);
-        llMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //跳到消息中心
-                startActivity(new Intent(getContext(), MessageActivity.class));
-
-            }
-        });
     }
 
     @Override
     public void initData() {
         mainBarName.setVisibility(View.VISIBLE);
-        llMessage.setVisibility(View.VISIBLE);
         mainBarName.setText("招标结果");
         mList.add("工程招标中标公示");
         mList.add("政府采购结果公告");

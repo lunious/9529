@@ -56,37 +56,36 @@
             android:layout_width="@dimen/d0"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:visibility="invisible">
 
             <FrameLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center">
+                android:layout_height="wrap_content">
 
 
                 <ImageView
-                    android:layout_width="@dimen/d18"
-                    android:layout_height="@dimen/d18"
-                    android:src="@mipmap/message"
-                    android:layout_gravity="center" />
+                    android:layout_width="@dimen/d17"
+                    android:layout_height="@dimen/d17"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/message" />
 
                 <TextView
                     android:id="@+id/message_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right|top"
+                    android:layout_marginLeft="@dimen/d24"
                     android:background="@drawable/ic_red_dot"
                     android:gravity="center"
-                    android:singleLine="true"
                     android:maxLines="1"
                     android:minWidth="14dp"
                     android:paddingLeft="@dimen/d3"
                     android:paddingRight="@dimen/d3"
-                    android:layout_marginLeft="@dimen/d24"
+                    android:singleLine="true"
+                    android:text="8"
                     android:textColor="@color/main_status_white"
-                    android:textSize="@dimen/d8"
-                    android:text="14" />
+                    android:textSize="@dimen/d8" />
             </FrameLayout>
 
 

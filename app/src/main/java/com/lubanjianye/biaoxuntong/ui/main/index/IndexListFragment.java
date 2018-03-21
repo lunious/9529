@@ -70,7 +70,7 @@ public class IndexListFragment extends BaseFragment {
 
     Banner indexItemBanner = null;
     private String mTitle = null;
-    private String mDiqu = null;
+    private static String mDiqu = null;
     private String deviceId = AppSysMgr.getPsuedoUniqueID();
 
 
@@ -82,6 +82,15 @@ public class IndexListFragment extends BaseFragment {
 
     public String getTitle() {
         return mTitle;
+    }
+
+
+    public static IndexListFragment getInstance(String title, String diqu) {
+        IndexListFragment sf = new IndexListFragment();
+        sf.mTitle = title;
+        mDiqu = diqu;
+        return sf;
+
     }
 
     //轮播图
@@ -190,8 +199,8 @@ public class IndexListFragment extends BaseFragment {
 
     private void initAdapter() {
 
-        mTitle = getArguments().getString("title");
-        mDiqu = getArguments().getString("diqu");
+//        mTitle = getArguments().getString("title");
+//        mDiqu = getArguments().getString("diqu");
 
         if ("最新标讯".equals(mTitle)) {
             mAdapter = new IndexListAdapter(R.layout.fragment_index_zxbx_item, mDataList);
@@ -365,6 +374,7 @@ public class IndexListFragment extends BaseFragment {
 
     public void requestData(final boolean isRefresh) {
 
+
         if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOGIN_SUCCSS)) {
             //已登录的数据请求
             List<UserProfile> users = DatabaseManager.getInstance().getDao().loadAll();
@@ -378,9 +388,10 @@ public class IndexListFragment extends BaseFragment {
                         .params("type", mTitle)
                         .params("userid", id)
                         .params("page", page)
+                        .params("diqu", mDiqu)
                         .params("size", 10)
                         .params("deviceId", deviceId)
-                        .cacheKey("index_list_login_cache" + mTitle)
+                        .cacheKey("index_list_login_cache" + mTitle + mDiqu)
                         .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                         .cacheTime(3600 * 72000)
                         .execute(new StringCallback() {
@@ -450,6 +461,7 @@ public class IndexListFragment extends BaseFragment {
                         .params("type", mTitle)
                         .params("userid", id)
                         .params("page", page)
+                        .params("diqu", mDiqu)
                         .params("size", 10)
                         .params("deviceId", deviceId)
                         .execute(new StringCallback() {
@@ -493,9 +505,10 @@ public class IndexListFragment extends BaseFragment {
                 OkGo.<String>post(BiaoXunTongApi.URL_GETINDEXLIST)
                         .params("type", mTitle)
                         .params("page", page)
+                        .params("diqu", mDiqu)
                         .params("size", 10)
                         .params("deviceId", deviceId)
-                        .cacheKey("index_list_no_login_cache" + mTitle)
+                        .cacheKey("index_list_no_login_cache" + mTitle + mDiqu)
                         .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                         .cacheTime(3600 * 72000)
                         .execute(new StringCallback() {
@@ -566,6 +579,7 @@ public class IndexListFragment extends BaseFragment {
                         .params("type", mTitle)
                         .params("page", page)
                         .params("size", 10)
+                        .params("diqu", mDiqu)
                         .params("deviceId", deviceId)
                         .execute(new StringCallback() {
                             @Override
