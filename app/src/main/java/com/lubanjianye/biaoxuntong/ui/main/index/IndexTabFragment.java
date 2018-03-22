@@ -381,6 +381,10 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
         mAdapter.notifyDataSetChanged();
 
         Log.d("SADBUASBDASDA", mDiqu);
+
+        if (promptDialog != null){
+            promptDialog.dismissImmediately();
+        }
     }
 
 
@@ -408,14 +412,19 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
 
 
                                     if (data != null) {
-                                        tv_location.setText(String.format("%s", data.getName()));
-                                        if (indexStlTab != null) {
-                                            indexStlTab.setCurrentTab(0);
-                                            indexStlTab.setViewPager(indexVp);
-                                            indexStlTab.notifyDataSetChanged();
+
+                                        if (!data.getName().equals(tv_location.getText().toString())){
+                                            tv_location.setText(String.format("%s", data.getName()));
+                                            if (indexStlTab != null) {
+                                                indexStlTab.setCurrentTab(0);
+                                                indexStlTab.setViewPager(indexVp);
+                                                indexStlTab.notifyDataSetChanged();
+                                            }
+                                            promptDialog.showLoading("请稍后");
+                                            requestData();
+                                            EventBus.getDefault().post(new EventMessage(EventMessage.LOCA_AREA_CHANGE));
                                         }
-                                        requestData();
-                                        EventBus.getDefault().post(new EventMessage(EventMessage.LOCA_AREA_CHANGE));
+
 
                                     } else {
                                         tv_location.setText(tv_location.getText().toString());
@@ -449,15 +458,17 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
 
 
                                     if (data != null) {
-                                        tv_location.setText(String.format("%s", data.getName()));
-                                        if (indexStlTab != null) {
-                                            indexStlTab.setCurrentTab(0);
-                                            indexStlTab.setViewPager(indexVp);
-                                            indexStlTab.notifyDataSetChanged();
+                                        if (!data.getName().equals(tv_location.getText().toString())){
+                                            tv_location.setText(String.format("%s", data.getName()));
+                                            if (indexStlTab != null) {
+                                                indexStlTab.setCurrentTab(0);
+                                                indexStlTab.setViewPager(indexVp);
+                                                indexStlTab.notifyDataSetChanged();
+                                            }
+                                            promptDialog.showLoading("请稍后");
+                                            requestData();
+                                            EventBus.getDefault().post(new EventMessage(EventMessage.LOCA_AREA_CHANGE));
                                         }
-                                        requestData();
-                                        EventBus.getDefault().post(new EventMessage(EventMessage.LOCA_AREA_CHANGE));
-
 
                                     } else {
                                         tv_location.setText(tv_location.getText().toString());
@@ -549,9 +560,10 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                         indexStlTab.setViewPager(indexVp);
                         indexStlTab.notifyDataSetChanged();
                     }
+
+                    promptDialog.showLoading("请稍后");
                     requestData();
 
-                    AppSharePreferenceMgr.put(getContext(), EventMessage.LOCA_AREA, tv_location.getText().toString());
                     EventBus.getDefault().post(new EventMessage(EventMessage.LOCA_AREA_CHANGE));
                 }
             });
