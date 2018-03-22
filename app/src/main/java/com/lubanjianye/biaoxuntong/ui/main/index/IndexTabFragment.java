@@ -251,6 +251,9 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                     .params("userId", userId)
                     .params("clientId", clientID)
                     .params("diqu", mDiqu)
+                    .cacheKey("index_tab_cache_login" + userId+mDiqu)
+                    .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                    .cacheTime(3600 * 48000)
                     .execute(new StringCallback() {
                         @Override
                         public void onSuccess(Response<String> response) {
@@ -274,6 +277,33 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
 
                             } else {
                                 ToastUtil.shortToast(getContext(), message);
+                            }
+                        }
+
+                        @Override
+                        public void onCacheSuccess(Response<String> response) {
+                            if (!isInitCache) {
+                                final JSONObject object = JSON.parseObject(response.body());
+                                String status = object.getString("status");
+                                String message = object.getString("message");
+
+                                if ("200".equals(status)) {
+                                    final JSONArray ownerList = object.getJSONArray("data");
+                                    if (mList.size() > 0) {
+                                        mList.clear();
+                                    }
+
+                                    for (int i = 0; i < ownerList.size(); i++) {
+                                        final JSONObject list = ownerList.getJSONObject(i);
+                                        String name = list.getString("name");
+                                        mList.add(name);
+                                    }
+                                    setUI(mList);
+
+                                } else {
+                                    ToastUtil.shortToast(getContext(), message);
+                                }
+                                isInitCache = true;
                             }
                         }
 
@@ -284,6 +314,9 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
             OkGo.<String>post(BiaoXunTongApi.URL_INDEXTAB)
                     .params("clientId", clientID)
                     .params("diqu", mDiqu)
+                    .cacheKey("index_tab_cache_no_login" + userId+mDiqu)
+                    .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                    .cacheTime(3600 * 48000)
                     .execute(new StringCallback() {
                         @Override
                         public void onSuccess(Response<String> response) {
@@ -307,6 +340,33 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                                 ToastUtil.shortToast(getContext(), message);
                             }
                         }
+                        @Override
+                        public void onCacheSuccess(Response<String> response) {
+                            if (!isInitCache) {
+                                final JSONObject object = JSON.parseObject(response.body());
+                                String status = object.getString("status");
+                                String message = object.getString("message");
+
+                                if ("200".equals(status)) {
+                                    final JSONArray ownerList = object.getJSONArray("data");
+                                    if (mList.size() > 0) {
+                                        mList.clear();
+                                    }
+
+                                    for (int i = 0; i < ownerList.size(); i++) {
+                                        final JSONObject list = ownerList.getJSONObject(i);
+                                        String name = list.getString("name");
+                                        mList.add(name);
+                                    }
+                                    setUI(mList);
+
+                                } else {
+                                    ToastUtil.shortToast(getContext(), message);
+                                }
+                                isInitCache = true;
+                            }
+                        }
+
                     });
 
         }
