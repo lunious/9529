@@ -404,10 +404,12 @@ public class IndexListFragment extends BaseFragment {
                                 final JSONObject data = object.getJSONObject("data");
                                 final String status = object.getString("status");
                                 final String message = object.getString("message");
-                                final JSONArray array = data.getJSONArray("list");
-                                final boolean nextPage = data.getBoolean("nextpage");
 
                                 if ("200".equals(status)) {
+
+                                    final JSONArray array = data.getJSONArray("list");
+                                    final boolean nextPage = data.getBoolean("nextpage");
+
                                     if (array.size() > 0) {
                                         page = 2;
                                         setData(isRefresh, array, nextPage);
@@ -434,10 +436,11 @@ public class IndexListFragment extends BaseFragment {
                                     final JSONObject data = object.getJSONObject("data");
                                     final String status = object.getString("status");
                                     final String message = object.getString("message");
-                                    final JSONArray array = data.getJSONArray("list");
-                                    final boolean nextPage = data.getBoolean("nextpage");
 
                                     if ("200".equals(status)) {
+                                        final JSONArray array = data.getJSONArray("list");
+                                        final boolean nextPage = data.getBoolean("nextpage");
+
                                         if (array.size() > 0) {
                                             setData(isRefresh, array, nextPage);
                                         } else {
@@ -474,10 +477,11 @@ public class IndexListFragment extends BaseFragment {
                                 final JSONObject data = object.getJSONObject("data");
                                 final String status = object.getString("status");
                                 final String message = object.getString("message");
-                                final JSONArray array = data.getJSONArray("list");
-                                final boolean nextPage = data.getBoolean("nextpage");
 
                                 if ("200".equals(status)) {
+                                    final JSONArray array = data.getJSONArray("list");
+                                    final boolean nextPage = data.getBoolean("nextpage");
+
                                     if (array.size() > 0) {
                                         setData(isRefresh, array, nextPage);
                                     } else {
@@ -520,10 +524,11 @@ public class IndexListFragment extends BaseFragment {
                                 final JSONObject data = object.getJSONObject("data");
                                 final String status = object.getString("status");
                                 final String message = object.getString("message");
-                                final JSONArray array = data.getJSONArray("list");
-                                final boolean nextPage = data.getBoolean("nextpage");
 
                                 if ("200".equals(status)) {
+
+                                    final JSONArray array = data.getJSONArray("list");
+                                    final boolean nextPage = data.getBoolean("nextpage");
                                     if (array.size() > 0) {
                                         page = 2;
                                         setData(isRefresh, array, nextPage);
@@ -551,10 +556,11 @@ public class IndexListFragment extends BaseFragment {
                                     final JSONObject data = object.getJSONObject("data");
                                     final String status = object.getString("status");
                                     final String message = object.getString("message");
-                                    final JSONArray array = data.getJSONArray("list");
-                                    final boolean nextPage = data.getBoolean("nextpage");
 
                                     if ("200".equals(status)) {
+                                        final JSONArray array = data.getJSONArray("list");
+                                        final boolean nextPage = data.getBoolean("nextpage");
+
                                         if (array.size() > 0) {
                                             page = 2;
                                             setData(isRefresh, array, nextPage);
@@ -590,10 +596,10 @@ public class IndexListFragment extends BaseFragment {
                                 final JSONObject data = object.getJSONObject("data");
                                 final String status = object.getString("status");
                                 final String message = object.getString("message");
-                                final JSONArray array = data.getJSONArray("list");
-                                final boolean nextPage = data.getBoolean("nextpage");
 
                                 if ("200".equals(status)) {
+                                    final JSONArray array = data.getJSONArray("list");
+                                    final boolean nextPage = data.getBoolean("nextpage");
                                     if (array.size() > 0) {
                                         setData(isRefresh, array, nextPage);
                                     } else {
