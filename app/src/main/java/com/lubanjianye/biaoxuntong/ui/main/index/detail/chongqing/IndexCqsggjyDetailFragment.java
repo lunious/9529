@@ -3,6 +3,9 @@ package com.lubanjianye.biaoxuntong.ui.main.index.detail.chongqing;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatTextView;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.lubanjianye.biaoxuntong.R;
 import com.lubanjianye.biaoxuntong.base.BaseFragment;
@@ -12,8 +15,9 @@ import com.lubanjianye.biaoxuntong.base.BaseFragment;
  * Created by 11645 on 2018/3/22.
  */
 
-public class IndexCqsggjyDetailFragment extends BaseFragment {
-
+public class IndexCqsggjyDetailFragment extends BaseFragment implements View.OnClickListener {
+    private LinearLayout llIvBack = null;
+    private AppCompatTextView mainBarName = null;
 
 
     private int mEntityId = -1;
@@ -54,16 +58,30 @@ public class IndexCqsggjyDetailFragment extends BaseFragment {
 
     @Override
     public void initView() {
-
+        llIvBack = getView().findViewById(R.id.ll_iv_back);
+        mainBarName = getView().findViewById(R.id.main_bar_name);
+        llIvBack.setOnClickListener(this);
     }
 
     @Override
     public void initData() {
-
+        llIvBack.setVisibility(View.VISIBLE);
+        mainBarName.setText("标讯详情");
     }
 
     @Override
     public void initEvent() {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.ll_iv_back:
+                getActivity().onBackPressed();
+                break;
+                default:
+                    break;
+        }
     }
 }

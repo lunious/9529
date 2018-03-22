@@ -1,16 +1,21 @@
 package com.lubanjianye.biaoxuntong.ui.browser;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.just.agentweb.AgentWeb;
+import com.just.agentweb.IAgentWebSettings;
 import com.lubanjianye.biaoxuntong.R;
 import com.lubanjianye.biaoxuntong.base.BaseFragment;
 import com.lubanjianye.biaoxuntong.util.toast.ToastUtil;
@@ -91,11 +96,16 @@ public class BrowserDetailFragment extends BaseFragment implements View.OnClickL
     public void initEvent() {
         webView = AgentWeb.with(this)
                 .setAgentWebParent(ll_webview, new LinearLayout.LayoutParams(-1, -1))
-                .useDefaultIndicator()
+                .useDefaultIndicator(getResources().getColor(R.color.main_status_red),3)
                 .createAgentWeb()
                 .ready()
                 .go(mUrl);
+
     }
+
+
+
+
 
     @Override
     public void onClick(View view) {

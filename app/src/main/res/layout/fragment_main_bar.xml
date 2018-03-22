@@ -83,7 +83,7 @@
                     android:paddingLeft="@dimen/d3"
                     android:paddingRight="@dimen/d3"
                     android:singleLine="true"
-                    android:text="8"
+                    android:text=""
                     android:textColor="@color/main_status_white"
                     android:textSize="@dimen/d8" />
             </FrameLayout>
