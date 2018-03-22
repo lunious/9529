@@ -96,6 +96,8 @@ public class IndexBxtgdjDetailFragment extends BaseFragment implements View.OnCl
     private String deviceId = AppSysMgr.getPsuedoUniqueID();
     private String ajaxType = "0";
 
+    private String mDiqu = "";
+
 
     public static IndexBxtgdjDetailFragment create(@NonNull int entityId, String entity, String ajaxlogtype) {
         final Bundle args = new Bundle();
@@ -163,6 +165,11 @@ public class IndexBxtgdjDetailFragment extends BaseFragment implements View.OnCl
         llQQBoShare.setOnClickListener(this);
         llWeixinBoShare.setOnClickListener(this);
         llPyqShare.setOnClickListener(this);
+
+
+        if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOCA_AREA)) {
+            mDiqu = (String) AppSharePreferenceMgr.get(getContext(), EventMessage.LOCA_AREA, "");
+        }
 
     }
 
@@ -246,6 +253,7 @@ public class IndexBxtgdjDetailFragment extends BaseFragment implements View.OnCl
                         .params("entityId", mEntityId)
                         .params("entity", mEntity)
                         .params("userid", id)
+                        .params("diqu",mDiqu)
                         .params("deviceId", deviceId)
                         .params("ajaxlogtype", ajaxType)
                         .execute(new StringCallback() {
@@ -391,6 +399,7 @@ public class IndexBxtgdjDetailFragment extends BaseFragment implements View.OnCl
                 OkGo.<String>post(BiaoXunTongApi.URL_GETCOLLECTIONLISTDETAIL)
                         .params("entityId", mEntityId)
                         .params("entity", mEntity)
+                        .params("diqu",mDiqu)
                         .params("deviceId", deviceId)
                         .params("ajaxlogtype", ajaxType)
                         .execute(new StringCallback() {
@@ -627,6 +636,7 @@ public class IndexBxtgdjDetailFragment extends BaseFragment implements View.OnCl
                                 .params("entityid", mEntityId)
                                 .params("entity", mEntity)
                                 .params("userid", id)
+                                .params("diqu",mDiqu)
                                 .params("deviceId", deviceId)
                                 .execute(new StringCallback() {
                                     @Override
@@ -650,6 +660,7 @@ public class IndexBxtgdjDetailFragment extends BaseFragment implements View.OnCl
                                 .params("entityid", mEntityId)
                                 .params("entity", mEntity)
                                 .params("userid", id)
+                                .params("diqu",mDiqu)
                                 .params("deviceId", deviceId)
                                 .execute(new StringCallback() {
                                     @Override

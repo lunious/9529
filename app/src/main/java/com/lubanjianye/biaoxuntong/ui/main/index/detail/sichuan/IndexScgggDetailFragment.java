@@ -139,6 +139,8 @@ public class IndexScgggDetailFragment extends BaseFragment implements View.OnCli
     private String deviceId = AppSysMgr.getPsuedoUniqueID();
     private String ajaxlogtype = "";
 
+    private String mDiqu = "";
+
 
     public static IndexScgggDetailFragment create(@NonNull int entityId, String entity, String ajaxlogtype) {
         final Bundle args = new Bundle();
@@ -248,6 +250,11 @@ public class IndexScgggDetailFragment extends BaseFragment implements View.OnCli
         tvYw.setOnClickListener(this);
 
 
+        if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOCA_AREA)) {
+            mDiqu = (String) AppSharePreferenceMgr.get(getContext(), EventMessage.LOCA_AREA, "");
+        }
+
+
     }
 
     @Override
@@ -323,6 +330,7 @@ public class IndexScgggDetailFragment extends BaseFragment implements View.OnCli
                         .params("entityId", mEntityId)
                         .params("entity", mEntity)
                         .params("userid", id)
+                        .params("diqu", mDiqu)
                         .params("deviceId", deviceId)
                         .params("ajaxlogtype", ajaxlogtype)
                         .execute(new StringCallback() {
@@ -558,6 +566,7 @@ public class IndexScgggDetailFragment extends BaseFragment implements View.OnCli
                 OkGo.<String>post(BiaoXunTongApi.URL_GETCOLLECTIONLISTDETAIL)
                         .params("entityId", mEntityId)
                         .params("entity", mEntity)
+                        .params("diqu", mDiqu)
                         .params("deviceId", deviceId)
                         .params("ajaxlogtype", ajaxlogtype)
                         .execute(new StringCallback() {
@@ -914,6 +923,7 @@ public class IndexScgggDetailFragment extends BaseFragment implements View.OnCli
                                 .params("entityid", mEntityId)
                                 .params("entity", mEntity)
                                 .params("userid", id)
+                                .params("diqu", mDiqu)
                                 .params("deviceId", deviceId)
                                 .execute(new StringCallback() {
                                     @Override
@@ -936,6 +946,7 @@ public class IndexScgggDetailFragment extends BaseFragment implements View.OnCli
                         OkGo.<String>post(BiaoXunTongApi.URL_ADDFAV)
                                 .params("entityid", mEntityId)
                                 .params("entity", mEntity)
+                                .params("diqu", mDiqu)
                                 .params("userid", id)
                                 .params("deviceId", deviceId)
                                 .execute(new StringCallback() {

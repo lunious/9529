@@ -119,6 +119,8 @@ public class ResultSggjyzbjgDetailFragment extends BaseFragment implements View.
     private String deviceId = AppSysMgr.getPsuedoUniqueID();
     private String ajaxType = "0";
 
+    private String mDiqu = "";
+
     @Override
     public Object setLayout() {
         return R.layout.fragment_result_sggjyzbjg_detail;
@@ -202,6 +204,11 @@ public class ResultSggjyzbjgDetailFragment extends BaseFragment implements View.
         llPyqShare.setOnClickListener(this);
 
 
+        if (AppSharePreferenceMgr.contains(getContext(),EventMessage.LOCA_AREA)){
+            mDiqu = (String) AppSharePreferenceMgr.get(getContext(),EventMessage.LOCA_AREA,"");
+        }
+
+
     }
 
     @Override
@@ -273,6 +280,7 @@ public class ResultSggjyzbjgDetailFragment extends BaseFragment implements View.
                 OkGo.<String>post(BiaoXunTongApi.URL_GETRESULTLISTDETAIL)
                         .params("entityId", mEntityId)
                         .params("entity", mEntity)
+                        .params("diqu",mDiqu)
                         .params("userid", id)
                         .params("deviceId", deviceId)
                         .params("ajaxlogtype", ajaxType)
@@ -454,6 +462,7 @@ public class ResultSggjyzbjgDetailFragment extends BaseFragment implements View.
                 OkGo.<String>post(BiaoXunTongApi.URL_GETRESULTLISTDETAIL)
                         .params("entityId", mEntityId)
                         .params("entity", mEntity)
+                        .params("diqu",mDiqu)
                         .params("deviceId", deviceId)
                         .params("ajaxlogtype", ajaxType)
                         .execute(new StringCallback() {
@@ -783,6 +792,7 @@ public class ResultSggjyzbjgDetailFragment extends BaseFragment implements View.
                         OkGo.<String>post(BiaoXunTongApi.URL_DELEFAV)
                                 .params("entityid", mEntityId)
                                 .params("entity", mEntity)
+                                .params("diqu",mDiqu)
                                 .params("userid", id)
                                 .execute(new StringCallback() {
                                     @Override
@@ -805,6 +815,7 @@ public class ResultSggjyzbjgDetailFragment extends BaseFragment implements View.
                         OkGo.<String>post(BiaoXunTongApi.URL_ADDFAV)
                                 .params("entityid", mEntityId)
                                 .params("entity", mEntity)
+                                .params("diqu",mDiqu)
                                 .params("userid", id)
                                 .execute(new StringCallback() {
                                     @Override

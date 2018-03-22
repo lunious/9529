@@ -21,6 +21,16 @@ public class CollectionListBean implements Serializable {
     private String sysTime = null;
     private String address = null;
 
+    private String url = null;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public String getAddress() {
         return address;
     }

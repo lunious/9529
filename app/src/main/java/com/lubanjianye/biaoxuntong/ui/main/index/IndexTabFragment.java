@@ -251,7 +251,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                     .params("userId", userId)
                     .params("clientId", clientID)
                     .params("diqu", mDiqu)
-                    .cacheKey("index_tab_cache_login" + userId+mDiqu)
+                    .cacheKey("index_tab_cache_login" + userId + mDiqu)
                     .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                     .cacheTime(3600 * 48000)
                     .execute(new StringCallback() {
@@ -314,7 +314,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
             OkGo.<String>post(BiaoXunTongApi.URL_INDEXTAB)
                     .params("clientId", clientID)
                     .params("diqu", mDiqu)
-                    .cacheKey("index_tab_cache_no_login" + userId+mDiqu)
+                    .cacheKey("index_tab_cache_no_login" + userId + mDiqu)
                     .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                     .cacheTime(3600 * 48000)
                     .execute(new StringCallback() {
@@ -340,6 +340,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                                 ToastUtil.shortToast(getContext(), message);
                             }
                         }
+
                         @Override
                         public void onCacheSuccess(Response<String> response) {
                             if (!isInitCache) {
@@ -382,9 +383,16 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
 
         Log.d("SADBUASBDASDA", mDiqu);
 
-        if (promptDialog != null){
-            promptDialog.dismissImmediately();
-        }
+        BiaoXunTong.getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (promptDialog != null) {
+                    promptDialog.dismissImmediately();
+                }
+            }
+        }, 1000);
+
+
     }
 
 
@@ -413,7 +421,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
 
                                     if (data != null) {
 
-                                        if (!data.getName().equals(tv_location.getText().toString())){
+                                        if (!data.getName().equals(tv_location.getText().toString())) {
                                             tv_location.setText(String.format("%s", data.getName()));
                                             if (indexStlTab != null) {
                                                 indexStlTab.setCurrentTab(0);
@@ -436,12 +444,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                                 @Override
                                 public void onLocate() {
                                     //开始定位，这里模拟一下定位
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            ToastUtil.shortToast(getApplicationContext(), "定位失败，请检查定位权限");
-                                        }
-                                    }, 3000);
+                                    locationTask();
 
                                 }
                             })
@@ -458,7 +461,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
 
 
                                     if (data != null) {
-                                        if (!data.getName().equals(tv_location.getText().toString())){
+                                        if (!data.getName().equals(tv_location.getText().toString())) {
                                             tv_location.setText(String.format("%s", data.getName()));
                                             if (indexStlTab != null) {
                                                 indexStlTab.setCurrentTab(0);
@@ -480,12 +483,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                                 @Override
                                 public void onLocate() {
                                     //开始定位，这里模拟一下定位
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            ToastUtil.shortToast(getApplicationContext(), "定位失败，请检查定位权限");
-                                        }
-                                    }, 3000);
+                                    locationTask();
 
                                 }
                             })

@@ -115,6 +115,7 @@ public class ResultXjgggDetailFragment extends BaseFragment implements View.OnCl
     private String ajaxType = "0";
     private String ywUrl = "";
 
+    private String mDiqu = "";
 
     @Override
     public Object setLayout() {
@@ -194,6 +195,11 @@ public class ResultXjgggDetailFragment extends BaseFragment implements View.OnCl
         llPyqShare.setOnClickListener(this);
         tvYw.setOnClickListener(this);
 
+
+        if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOCA_AREA)) {
+            mDiqu = (String) AppSharePreferenceMgr.get(getContext(), EventMessage.LOCA_AREA, "");
+        }
+
     }
 
     @Override
@@ -260,6 +266,7 @@ public class ResultXjgggDetailFragment extends BaseFragment implements View.OnCl
                 OkGo.<String>post(BiaoXunTongApi.URL_GETRESULTLISTDETAIL)
                         .params("entityId", mEntityId)
                         .params("entity", mEntity)
+                        .params("diqu", mDiqu)
                         .params("userid", id)
                         .params("deviceId", deviceId)
                         .params("ajaxlogtype", ajaxType)
@@ -449,6 +456,7 @@ public class ResultXjgggDetailFragment extends BaseFragment implements View.OnCl
                 OkGo.<String>post(BiaoXunTongApi.URL_GETRESULTLISTDETAIL)
                         .params("entityId", mEntityId)
                         .params("entity", mEntity)
+                        .params("diqu", mDiqu)
                         .params("deviceId", deviceId)
                         .params("ajaxlogtype", ajaxType)
                         .execute(new StringCallback() {
@@ -780,6 +788,7 @@ public class ResultXjgggDetailFragment extends BaseFragment implements View.OnCl
                         OkGo.<String>post(BiaoXunTongApi.URL_DELEFAV)
                                 .params("entityid", mEntityId)
                                 .params("entity", mEntity)
+                                .params("diqu", mDiqu)
                                 .params("userid", id)
                                 .execute(new StringCallback() {
                                     @Override
@@ -802,6 +811,7 @@ public class ResultXjgggDetailFragment extends BaseFragment implements View.OnCl
                         OkGo.<String>post(BiaoXunTongApi.URL_ADDFAV)
                                 .params("entityid", mEntityId)
                                 .params("entity", mEntity)
+                                .params("diqu", mDiqu)
                                 .params("userid", id)
                                 .execute(new StringCallback() {
                                     @Override

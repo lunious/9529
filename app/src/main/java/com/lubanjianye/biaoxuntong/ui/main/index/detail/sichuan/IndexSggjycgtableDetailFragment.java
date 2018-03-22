@@ -111,6 +111,8 @@ public class IndexSggjycgtableDetailFragment extends BaseFragment implements Vie
     private String deviceId = AppSysMgr.getPsuedoUniqueID();
     private String ajaxlogtype = "";
 
+    private String mDiqu = "";
+
 
     public static IndexSggjycgtableDetailFragment create(@NonNull int entityId, String entity, String ajaxlogtype) {
         final Bundle args = new Bundle();
@@ -190,6 +192,11 @@ public class IndexSggjycgtableDetailFragment extends BaseFragment implements Vie
         tvJg = getView().findViewById(R.id.tv_jggg);
         tvGz.setOnClickListener(this);
         tvJg.setOnClickListener(this);
+
+
+        if (AppSharePreferenceMgr.contains(getContext(),EventMessage.LOCA_AREA)){
+            mDiqu = (String) AppSharePreferenceMgr.get(getContext(),EventMessage.LOCA_AREA,"");
+        }
 
 
     }
@@ -273,6 +280,7 @@ public class IndexSggjycgtableDetailFragment extends BaseFragment implements Vie
                         .params("entityId", mEntityId)
                         .params("entity", mEntity)
                         .params("userid", id)
+                        .params("diqu",mDiqu)
                         .params("deviceId", deviceId)
                         .params("ajaxlogtype", ajaxlogtype)
                         .execute(new StringCallback() {
@@ -451,6 +459,7 @@ public class IndexSggjycgtableDetailFragment extends BaseFragment implements Vie
                 OkGo.<String>post(BiaoXunTongApi.URL_GETCOLLECTIONLISTDETAIL)
                         .params("entityId", mEntityId)
                         .params("entity", mEntity)
+                        .params("diqu",mDiqu)
                         .params("deviceId", deviceId)
                         .params("ajaxlogtype", ajaxlogtype)
                         .execute(new StringCallback() {
@@ -747,6 +756,7 @@ public class IndexSggjycgtableDetailFragment extends BaseFragment implements Vie
                         OkGo.<String>post(BiaoXunTongApi.URL_DELEFAV)
                                 .params("entityid", mEntityId)
                                 .params("entity", mEntity)
+                                .params("diqu",mDiqu)
                                 .params("userid", id)
                                 .params("deviceId", deviceId)
                                 .execute(new StringCallback() {
@@ -769,6 +779,7 @@ public class IndexSggjycgtableDetailFragment extends BaseFragment implements Vie
                         OkGo.<String>post(BiaoXunTongApi.URL_ADDFAV)
                                 .params("entityid", mEntityId)
                                 .params("entity", mEntity)
+                                .params("diqu",mDiqu)
                                 .params("userid", id)
                                 .params("deviceId", deviceId)
                                 .execute(new StringCallback() {

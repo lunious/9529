@@ -481,7 +481,15 @@ public class SortColumnFragment extends BaseFragment implements View.OnClickList
 
         mAdapter.notifyDataSetChanged();
 
-        promptDialog.dismissImmediately();
+        BiaoXunTong.getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (promptDialog != null) {
+                    promptDialog.dismissImmediately();
+                }
+            }
+        }, 1000);
+
 
     }
 
