@@ -21,9 +21,11 @@ import com.lubanjianye.biaoxuntong.database.DatabaseManager;
 import com.lubanjianye.biaoxuntong.database.UserProfile;
 import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
 import com.lubanjianye.biaoxuntong.api.BiaoXunTongApi;
+import com.lubanjianye.biaoxuntong.ui.browser.BrowserDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.result.detail.chongqing.ResultCqsggjyzbjgDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.view.loadmore.CustomLoadMoreView;
-import com.lubanjianye.biaoxuntong.ui.main.result.detail.ResultSggjyzbjgDetailActivity;
-import com.lubanjianye.biaoxuntong.ui.main.result.detail.ResultXjgggDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.result.detail.sichuan.ResultSggjyzbjgDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.result.detail.sichuan.ResultXjgggDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.main.result.search.ResultSearchActivity;
 import com.lubanjianye.biaoxuntong.util.aes.AesUtil;
 import com.lubanjianye.biaoxuntong.util.netStatus.NetUtil;
@@ -108,23 +110,43 @@ public class ResultListFragment extends BaseFragment {
                 Log.d("JASBHDBHSABDSADSAD", entityId + "___" + entity);
 
                 Intent intent = null;
+                if (mDiqu.equals("四川")){
 
-                if ("xjggg".equals(entity) || "sjggg".equals(entity) || "sggjy".equals(entity) || "sggjycgjgtable".equals(entity)) {
-                    intent = new Intent(getActivity(), ResultXjgggDetailActivity.class);
-                    intent.putExtra("entityId", entityId);
-                    intent.putExtra("entity", entity);
-                    intent.putExtra("ajaxlogtype", "0");
-                    intent.putExtra("mId", "");
-                    startActivity(intent);
+                    if ("xjggg".equals(entity) || "sjggg".equals(entity) || "sggjy".equals(entity) || "sggjycgjgtable".equals(entity)) {
+                        intent = new Intent(getActivity(), ResultXjgggDetailActivity.class);
+                        intent.putExtra("entityId", entityId);
+                        intent.putExtra("entity", entity);
+                        intent.putExtra("ajaxlogtype", "0");
+                        intent.putExtra("mId", "");
+                        startActivity(intent);
 
-                } else if ("sggjyzbjg".equals(entity) || "sggjycgjgrow".equals(entity) || "sggjyjgcgtable".equals(entity)) {
-                    intent = new Intent(getActivity(), ResultSggjyzbjgDetailActivity.class);
-                    intent.putExtra("entityId", entityId);
-                    intent.putExtra("entity", entity);
-                    intent.putExtra("ajaxlogtype", "0");
-                    intent.putExtra("mId", "");
-                    startActivity(intent);
+                    } else if ("sggjyzbjg".equals(entity) || "sggjycgjgrow".equals(entity) || "sggjyjgcgtable".equals(entity)) {
+                        intent = new Intent(getActivity(), ResultSggjyzbjgDetailActivity.class);
+                        intent.putExtra("entityId", entityId);
+                        intent.putExtra("entity", entity);
+                        intent.putExtra("ajaxlogtype", "0");
+                        intent.putExtra("mId", "");
+                        startActivity(intent);
+                    }
+                }else if (mDiqu.equals("重庆")){
+                    if ("cqcggg".equals(entity)){
+                        final String url = data.getUrl();
+                        final String title = data.getEntryName();
+                        intent = new Intent(getActivity(), BrowserDetailActivity.class);
+                        intent.putExtra("url",url);
+                        intent.putExtra("title", title);
+                        startActivity(intent);
+                    }else if ("cqsggjyzbjg".equals(entity)){
+                        intent = new Intent(BiaoXunTong.getApplicationContext(), ResultCqsggjyzbjgDetailActivity.class);
+                        intent.putExtra("entityId", entityId);
+                        intent.putExtra("entity", entity);
+                        intent.putExtra("ajaxlogtype", "0");
+                        intent.putExtra("mId", "");
+                        startActivity(intent);
+                    }
                 }
+
+
 
             }
         });
@@ -478,6 +500,7 @@ public class ResultListFragment extends BaseFragment {
                 bean.setSysTime(list.getString("sysTime"));
                 bean.setEntityid(list.getInteger("entityid"));
                 bean.setEntity(list.getString("entity"));
+                bean.setUrl(list.getString("url"));
                 mDataList.add(bean);
             }
 
@@ -496,6 +519,7 @@ public class ResultListFragment extends BaseFragment {
                     bean.setSysTime(list.getString("sysTime"));
                     bean.setEntityid(list.getInteger("entityid"));
                     bean.setEntity(list.getString("entity"));
+                    bean.setUrl(list.getString("url"));
                     mDataList.add(bean);
                 }
             }

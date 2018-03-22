@@ -1,4 +1,4 @@
-package com.lubanjianye.biaoxuntong.ui.main.result.detail;
+package com.lubanjianye.biaoxuntong.ui.main.result.detail.sichuan;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,13 +22,13 @@ import com.lubanjianye.biaoxuntong.database.UserProfile;
 import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
 import com.lubanjianye.biaoxuntong.api.BiaoXunTongApi;
 import com.lubanjianye.biaoxuntong.sign.SignInActivity;
-import com.lubanjianye.biaoxuntong.ui.browser.BrowserActivity;
-import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexBxtgdjDetailActivity;
-import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexScgggDetailActivity;
-import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexSggjyDetailActivity;
-import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexSggjycgrowDetailActivity;
-import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexSggjycgtableDetailActivity;
-import com.lubanjianye.biaoxuntong.ui.main.index.detail.IndexXcgggDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.browser.BrowserDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.index.detail.sichuan.IndexBxtgdjDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.index.detail.sichuan.IndexScgggDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.index.detail.sichuan.IndexSggjyDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.index.detail.sichuan.IndexSggjycgrowDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.index.detail.sichuan.IndexSggjycgtableDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.index.detail.sichuan.IndexXcgggDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.share.OpenBuilder;
 import com.lubanjianye.biaoxuntong.ui.share.OpenConstant;
 import com.lubanjianye.biaoxuntong.ui.share.Share;
@@ -402,7 +402,7 @@ public class ResultXjgggDetailFragment extends BaseFragment implements View.OnCl
                                         tvOwerLianxiLink.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                Intent intent = new Intent(getActivity(), BrowserActivity.class);
+                                                Intent intent = new Intent(getActivity(), BrowserDetailActivity.class);
                                                 intent.putExtra("url", link);
                                                 intent.putExtra("title", shareTitle);
                                                 startActivity(intent);
@@ -582,7 +582,7 @@ public class ResultXjgggDetailFragment extends BaseFragment implements View.OnCl
                                         tvOwerLianxiLink.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                Intent intent = new Intent(getActivity(), BrowserActivity.class);
+                                                Intent intent = new Intent(getActivity(), BrowserDetailActivity.class);
                                                 intent.putExtra("url", link);
                                                 intent.putExtra("title", shareTitle);
                                                 startActivity(intent);
@@ -826,7 +826,7 @@ public class ResultXjgggDetailFragment extends BaseFragment implements View.OnCl
                 }
                 break;
             case R.id.tv_yw:
-                intent = new Intent(getActivity(), BrowserActivity.class);
+                intent = new Intent(getActivity(), BrowserDetailActivity.class);
                 intent.putExtra("url", ywUrl);
                 intent.putExtra("title", shareTitle);
                 startActivity(intent);

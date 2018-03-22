@@ -1,4 +1,4 @@
-package com.lubanjianye.biaoxuntong.ui.main.index.detail;
+package com.lubanjianye.biaoxuntong.ui.main.index.detail.sichuan;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,9 +23,9 @@ import com.lubanjianye.biaoxuntong.database.DatabaseManager;
 import com.lubanjianye.biaoxuntong.database.UserProfile;
 import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
 import com.lubanjianye.biaoxuntong.sign.SignInActivity;
-import com.lubanjianye.biaoxuntong.ui.browser.BrowserActivity;
-import com.lubanjianye.biaoxuntong.ui.main.result.detail.ResultSggjyzbjgDetailActivity;
-import com.lubanjianye.biaoxuntong.ui.main.result.detail.ResultXjgggDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.browser.BrowserDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.result.detail.sichuan.ResultSggjyzbjgDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.main.result.detail.sichuan.ResultXjgggDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.share.OpenBuilder;
 import com.lubanjianye.biaoxuntong.ui.share.OpenConstant;
 import com.lubanjianye.biaoxuntong.ui.share.Share;
@@ -808,7 +808,7 @@ public class IndexScgggDetailFragment extends BaseFragment implements View.OnCli
         switch (view.getId()) {
 
             case R.id.tv_gzgg:
-                intent = new Intent(getActivity(), BrowserActivity.class);
+                intent = new Intent(getActivity(), BrowserDetailActivity.class);
                 intent.putExtra("url", gzUrl);
                 intent.putExtra("title", "更正公告");
                 startActivity(intent);
@@ -964,7 +964,7 @@ public class IndexScgggDetailFragment extends BaseFragment implements View.OnCli
                 toShare(mEntityId, shareTitle, shareContent, BiaoXunTongApi.SHARE_URL + shareUrl);
                 break;
             case R.id.tv_yw:
-                intent = new Intent(getActivity(), BrowserActivity.class);
+                intent = new Intent(getActivity(), BrowserDetailActivity.class);
                 intent.putExtra("url", shareUrl);
                 intent.putExtra("title", shareTitle);
                 startActivity(intent);

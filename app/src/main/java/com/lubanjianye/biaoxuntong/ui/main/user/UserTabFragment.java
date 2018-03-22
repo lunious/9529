@@ -19,7 +19,7 @@ import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
 import com.lubanjianye.biaoxuntong.api.BiaoXunTongApi;
 import com.lubanjianye.biaoxuntong.sign.AboutActivity;
 import com.lubanjianye.biaoxuntong.sign.SignInActivity;
-import com.lubanjianye.biaoxuntong.ui.browser.BrowserActivity;
+import com.lubanjianye.biaoxuntong.ui.browser.BrowserDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.main.user.avater.AvaterActivity;
 import com.lubanjianye.biaoxuntong.ui.main.user.company.MyCompanyActivity;
 import com.lubanjianye.biaoxuntong.ui.main.user.setting.SettingActivity;
@@ -306,12 +306,12 @@ public class UserTabFragment extends BaseFragment implements View.OnClickListene
                 if (position == 0) {
                     toShare(0, "我正在使用【鲁班标讯通】,推荐给你", "企业资质、人员资格、业绩、信用奖惩、经营风险、法律诉讼一键查询！", detail_1);
                 } else if (position == 1) {
-                    intent = new Intent(getActivity(), BrowserActivity.class);
+                    intent = new Intent(getActivity(), BrowserDetailActivity.class);
                     intent.putExtra("url", detail_2);
                     intent.putExtra("title", "鲁班建业通-招投标神器");
                     startActivity(intent);
                 } else {
-                    intent = new Intent(getActivity(), BrowserActivity.class);
+                    intent = new Intent(getActivity(), BrowserDetailActivity.class);
                     intent.putExtra("url", detail_3);
                     intent.putExtra("title", "鲁班建业通-招投标神器");
                     startActivity(intent);

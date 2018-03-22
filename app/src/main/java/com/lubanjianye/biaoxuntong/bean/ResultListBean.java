@@ -20,6 +20,16 @@ public class ResultListBean implements Serializable {
     private int entityid = 0;
     private String sysTime = null;
 
+    private String url = null;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public int getId() {
         return id;
     }

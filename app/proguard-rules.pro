@@ -20,6 +20,14 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+#AgentWeb
+-keep class com.just.agentweb.** {
+    *;
+}
+-dontwarn com.just.agentweb.**
+
+-keepclassmembers class com.just.agentweb.sample.common.AndroidInterface{ *; }
+
 # 百度定位
 -keep class com.baidu.** {*;}
 -keep class vi.com.** {*;}

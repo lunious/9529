@@ -6,16 +6,10 @@ import com.lubanjianye.biaoxuntong.base.BaseActivity;
 import com.lubanjianye.biaoxuntong.base.BaseFragment;
 
 /**
- * 项目名:   AppLunious
- * 包名:     com.lubanjianye.biaoxuntong.ui.browser
- * 文件名:   BrowserActivity
- * 创建者:   lunious
- * 创建时间: 2017/12/11  12:58
- * 描述:     TODO
+ * Created by 11645 on 2018/3/22.
  */
 
-public class BrowserActivity extends BaseActivity {
-
+public class BrowserDetailActivity extends BaseActivity {
     private String mUrl = "";
     private String mTitle = "";
 
@@ -27,8 +21,7 @@ public class BrowserActivity extends BaseActivity {
             mTitle = intent.getStringExtra("title");
         }
 
-        final BrowserFragment fragment = BrowserFragment.create(mUrl, mTitle);
+        final BrowserDetailFragment fragment = BrowserDetailFragment.create(mUrl, mTitle);
         return fragment;
     }
-
 }

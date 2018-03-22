@@ -23,6 +23,16 @@ public class IndexListBean implements Serializable{
     private String signstauts = null;
     private String address = null;
 
+    private String url = null;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public int getId() {
         return id;
     }
