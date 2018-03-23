@@ -1,10 +1,11 @@
 package com.lubanjianye.biaoxuntong.ui.message;
 
-import android.widget.TextView;
+import android.support.v7.widget.RecyclerView;
 
+import com.classic.common.MultipleStatusView;
 import com.lubanjianye.biaoxuntong.R;
 import com.lubanjianye.biaoxuntong.base.BaseFragment;
-import com.lubanjianye.biaoxuntong.ui.main.result.ResultListFragment;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 /**
  * Created by 11645 on 2018/3/21.
@@ -13,7 +14,9 @@ import com.lubanjianye.biaoxuntong.ui.main.result.ResultListFragment;
 public class MessageListFragment extends BaseFragment {
 
 
-    private TextView tv_message = null;
+    private RecyclerView messageRecycler = null;
+    private SmartRefreshLayout messageRefresh = null;
+    private MultipleStatusView loadingStatus = null;
 
     private String mTitle = null;
 
@@ -32,14 +35,14 @@ public class MessageListFragment extends BaseFragment {
 
     @Override
     public void initView() {
-        tv_message = getView().findViewById(R.id.tv_message);
-
+        messageRecycler = getView().findViewById(R.id.message_recycler);
+        messageRefresh = getView().findViewById(R.id.message_refresh);
+        loadingStatus = getView().findViewById(R.id.message_list_status_view);
     }
 
     @Override
     public void initData() {
 
-        tv_message.setText("暂无新消息");
 
     }
 

@@ -8,7 +8,6 @@ import android.widget.LinearLayout;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.lubanjianye.biaoxuntong.R;
 import com.lubanjianye.biaoxuntong.base.BaseFragment;
-import com.lubanjianye.biaoxuntong.ui.main.result.ResultFragmentAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,9 +50,9 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
         llIvBack.setVisibility(View.VISIBLE);
         mainBarName.setText("消息中心");
 
-        mList.add("历史推送");
-        mList.add("系统通知");
-        mList.add("相关推荐");
+        mList.add("全部推送");
+        mList.add("关注推送");
+
     }
 
     @Override

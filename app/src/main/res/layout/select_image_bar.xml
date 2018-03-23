@@ -8,15 +8,16 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/d42"
-        android:layout_marginTop="@dimen/d24"
         android:background="@color/main_theme_color">
 
         <ImageView
             android:id="@+id/icon_back"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_width="@dimen/d16"
+            android:layout_height="@dimen/d16"
             android:clickable="true"
             android:scaleType="centerInside"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/d10"
             android:src="@mipmap/btn_back" />
 
         <FrameLayout
