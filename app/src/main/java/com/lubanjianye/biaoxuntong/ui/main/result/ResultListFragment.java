@@ -219,6 +219,8 @@ public class ResultListFragment extends BaseFragment {
         if (EventMessage.LOCA_AREA_CHANGE.equals(message.getMessage())) {
 
             requestData(true);
+        }else if (EventMessage.CLICK_FAV.equals(message.getMessage())){
+            requestData(true);
         }
 
 
