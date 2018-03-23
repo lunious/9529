@@ -11,9 +11,7 @@ import android.widget.LinearLayout;
 import com.classic.common.MultipleStatusView;
 import com.lubanjianye.biaoxuntong.R;
 import com.lubanjianye.biaoxuntong.base.BaseFragment;
-import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
 import com.lubanjianye.biaoxuntong.util.netStatus.NetUtil;
-import com.lubanjianye.biaoxuntong.util.sp.AppSharePreferenceMgr;
 
 /**
  * 项目名:   LBBXT
@@ -43,7 +41,6 @@ public class IndexHyzxDetailFragment extends BaseFragment implements View.OnClic
     private String mTItle = "";
     private String mTime = "";
     private String mContent = "";
-
 
 
     @Override

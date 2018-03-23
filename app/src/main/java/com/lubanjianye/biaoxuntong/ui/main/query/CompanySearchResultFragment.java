@@ -351,6 +351,7 @@ public class CompanySearchResultFragment extends BaseFragment implements View.On
                 bean.setLxr(list.getString("lxr"));
                 bean.setEntrySign(list.getString("entrySign"));
                 bean.setSfId(list.getString("sfId"));
+                bean.setProvinceCode(mProvinceCode);
                 mDataList.add(bean);
             }
             companySearchResultRefresh.finishRefresh(0, true);
@@ -364,6 +365,7 @@ public class CompanySearchResultFragment extends BaseFragment implements View.On
                     bean.setLxr(list.getString("lxr"));
                     bean.setEntrySign(list.getString("entrySign"));
                     bean.setSfId(list.getString("sfId"));
+                    bean.setProvinceCode(mProvinceCode);
                     mDataList.add(bean);
                 }
             }

@@ -2,7 +2,6 @@ package com.lubanjianye.biaoxuntong.ui.main.index;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatTextView;
@@ -224,7 +223,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                 //检查定位
                 locationTask();
             }
-        }, 6000);
+        }, 4000);
 
 
     }
@@ -571,6 +570,7 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
                     .round(8).loadingDuration(200);
             promptDialog.showWarnAlert("当前定位为" + locationArea + "," + "是否切换到" + locationArea + "?", cancel, sure, true);
         }
+
 
     }
 
