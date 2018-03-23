@@ -22,7 +22,7 @@ import com.lubanjianye.biaoxuntong.database.UserProfile;
 import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
 import com.lubanjianye.biaoxuntong.api.BiaoXunTongApi;
 import com.lubanjianye.biaoxuntong.sign.SignInActivity;
-import com.lubanjianye.biaoxuntong.ui.browser.BrowserDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.browser.BrowserActivity;
 import com.lubanjianye.biaoxuntong.ui.main.index.detail.sichuan.IndexBxtgdjDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.main.index.detail.sichuan.IndexScgggDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.main.index.detail.sichuan.IndexSggjyDetailActivity;
@@ -409,7 +409,7 @@ public class ResultXjgggDetailFragment extends BaseFragment implements View.OnCl
                                         tvOwerLianxiLink.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                Intent intent = new Intent(getActivity(), BrowserDetailActivity.class);
+                                                Intent intent = new Intent(getActivity(), BrowserActivity.class);
                                                 intent.putExtra("url", link);
                                                 intent.putExtra("title", shareTitle);
                                                 startActivity(intent);
@@ -590,7 +590,7 @@ public class ResultXjgggDetailFragment extends BaseFragment implements View.OnCl
                                         tvOwerLianxiLink.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                Intent intent = new Intent(getActivity(), BrowserDetailActivity.class);
+                                                Intent intent = new Intent(getActivity(), BrowserActivity.class);
                                                 intent.putExtra("url", link);
                                                 intent.putExtra("title", shareTitle);
                                                 startActivity(intent);
@@ -836,7 +836,7 @@ public class ResultXjgggDetailFragment extends BaseFragment implements View.OnCl
                 }
                 break;
             case R.id.tv_yw:
-                intent = new Intent(getActivity(), BrowserDetailActivity.class);
+                intent = new Intent(getActivity(), BrowserActivity.class);
                 intent.putExtra("url", ywUrl);
                 intent.putExtra("title", shareTitle);
                 startActivity(intent);

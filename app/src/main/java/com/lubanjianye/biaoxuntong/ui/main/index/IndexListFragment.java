@@ -20,6 +20,7 @@ import com.lubanjianye.biaoxuntong.database.DatabaseManager;
 import com.lubanjianye.biaoxuntong.database.UserProfile;
 import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
 import com.lubanjianye.biaoxuntong.api.BiaoXunTongApi;
+import com.lubanjianye.biaoxuntong.ui.browser.BrowserActivity;
 import com.lubanjianye.biaoxuntong.ui.browser.BrowserDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.main.index.detail.chongqing.IndexCqsggjyDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.view.loadmore.CustomLoadMoreView;
@@ -145,8 +146,9 @@ public class IndexListFragment extends BaseFragment {
                 final IndexListBean data = (IndexListBean) adapter.getData().get(position);
                 final int entityId = data.getEntityId();
                 final String entity = data.getEntity();
+                final int favorite = data.getFavorite();
 
-                Log.d("BASJHDHJSADASDA", entity + entityId);
+                Log.d("BASJHDHJSADASDA", entity + entityId+"BASJHDHJSADASDA==="+favorite);
 
 
                 Intent intent = null;
@@ -202,6 +204,9 @@ public class IndexListFragment extends BaseFragment {
                         intent = new Intent(getActivity(), BrowserDetailActivity.class);
                         intent.putExtra("url", url);
                         intent.putExtra("title", title);
+                        intent.putExtra("entity",entity);
+                        intent.putExtra("entityid",entityId);
+                        intent.putExtra("favorite",favorite);
                         startActivity(intent);
                     }else if ("cqsggjy".equals(entity)){
                         intent = new Intent(BiaoXunTong.getApplicationContext(), IndexCqsggjyDetailActivity.class);
@@ -285,7 +290,8 @@ public class IndexListFragment extends BaseFragment {
         if ("sx".equals(message.getMessage())) {
             //更新UI
             indexRefresh.autoRefresh();
-
+        }else if (EventMessage.CLICK_FAV.equals(message.getMessage())){
+            requestData(true);
         }
 
 
@@ -381,12 +387,12 @@ public class IndexListFragment extends BaseFragment {
                 if (position == 0) {
                     toShare(0, "我正在使用【鲁班标讯通】,推荐给你", "企业资质、人员资格、业绩、信用奖惩、经营风险、法律诉讼一键查询！", detail_1);
                 } else if (position == 1) {
-                    intent = new Intent(getActivity(), BrowserDetailActivity.class);
+                    intent = new Intent(getActivity(), BrowserActivity.class);
                     intent.putExtra("url", detail_2);
                     intent.putExtra("title", "鲁班建业通-招投标神器");
                     startActivity(intent);
                 } else {
-                    intent = new Intent(getActivity(), BrowserDetailActivity.class);
+                    intent = new Intent(getActivity(), BrowserActivity.class);
                     intent.putExtra("url", detail_3);
                     intent.putExtra("title", "鲁班建业通-招投标神器");
                     startActivity(intent);
@@ -662,6 +668,7 @@ public class IndexListFragment extends BaseFragment {
                 bean.setDeadTime(list.getString("deadTime"));
                 bean.setAddress(list.getString("address"));
                 bean.setUrl(list.getString("url"));
+                bean.setFavorite(list.getInteger("favorite"));
                 if ("最新标讯".equals(mTitle)) {
                     bean.setType(list.getString("type"));
                 }
@@ -685,6 +692,7 @@ public class IndexListFragment extends BaseFragment {
                     bean.setDeadTime(list.getString("deadTime"));
                     bean.setAddress(list.getString("address"));
                     bean.setUrl(list.getString("url"));
+                    bean.setFavorite(list.getInteger("favorite"));
                     if ("最新标讯".equals(mTitle)) {
                         bean.setType(list.getString("type"));
                     }

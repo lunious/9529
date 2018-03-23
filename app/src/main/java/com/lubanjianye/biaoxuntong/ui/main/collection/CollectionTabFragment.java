@@ -21,6 +21,7 @@ import com.lubanjianye.biaoxuntong.bean.CollectionListBean;
 import com.lubanjianye.biaoxuntong.database.DatabaseManager;
 import com.lubanjianye.biaoxuntong.database.UserProfile;
 import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
+import com.lubanjianye.biaoxuntong.ui.browser.BrowserActivity;
 import com.lubanjianye.biaoxuntong.ui.browser.BrowserDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.main.index.detail.chongqing.IndexCqsggjyDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.main.result.detail.chongqing.ResultCqsggjyzbjgDetailActivity;
@@ -369,6 +370,9 @@ public class CollectionTabFragment extends BaseFragment implements View.OnClickL
                         intent = new Intent(getActivity(), BrowserDetailActivity.class);
                         intent.putExtra("url", url);
                         intent.putExtra("title", title);
+                        intent.putExtra("entity",entity);
+                        intent.putExtra("entityid",entityId);
+                        intent.putExtra("favorite",1);
                         startActivity(intent);
                     } else if ("cqsggjy".equals(entity)) {
                         intent = new Intent(BiaoXunTong.getApplicationContext(), IndexCqsggjyDetailActivity.class);

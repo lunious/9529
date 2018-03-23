@@ -21,7 +21,7 @@ import com.lubanjianye.biaoxuntong.bean.ResultListBean;
 import com.lubanjianye.biaoxuntong.database.DatabaseManager;
 import com.lubanjianye.biaoxuntong.database.UserProfile;
 import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
-import com.lubanjianye.biaoxuntong.ui.browser.BrowserDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.browser.BrowserActivity;
 import com.lubanjianye.biaoxuntong.ui.main.result.detail.chongqing.ResultCqsggjyzbjgDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.view.loadmore.CustomLoadMoreView;
 import com.lubanjianye.biaoxuntong.api.BiaoXunTongApi;
@@ -126,7 +126,7 @@ public class ResultSearchFragment extends BaseFragment {
                     if ("cqcggg".equals(entity)){
                         final String url = data.getUrl();
                         final String title = data.getEntryName();
-                        intent = new Intent(getActivity(), BrowserDetailActivity.class);
+                        intent = new Intent(getActivity(), BrowserActivity.class);
                         intent.putExtra("url",url);
                         intent.putExtra("title", title);
                         startActivity(intent);

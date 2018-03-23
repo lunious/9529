@@ -23,7 +23,7 @@ import com.lubanjianye.biaoxuntong.database.UserProfile;
 import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
 import com.lubanjianye.biaoxuntong.api.BiaoXunTongApi;
 import com.lubanjianye.biaoxuntong.sign.SignInActivity;
-import com.lubanjianye.biaoxuntong.ui.browser.BrowserDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.browser.BrowserActivity;
 import com.lubanjianye.biaoxuntong.ui.main.index.detail.sichuan.IndexBxtgdjDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.main.index.detail.sichuan.IndexScgggDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.main.index.detail.sichuan.IndexSggjyDetailActivity;
@@ -318,7 +318,7 @@ public class ResultSggjyzbjgDetailFragment extends BaseFragment implements View.
                                     tvDataDetail.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Intent intent = new Intent(getActivity(), BrowserDetailActivity.class);
+                                            Intent intent = new Intent(getActivity(), BrowserActivity.class);
                                             intent.putExtra("url", url);
                                             intent.putExtra("title", shareTitle);
                                             startActivity(intent);
@@ -491,7 +491,7 @@ public class ResultSggjyzbjgDetailFragment extends BaseFragment implements View.
                                     tvDataDetail.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Intent intent = new Intent(getActivity(), BrowserDetailActivity.class);
+                                            Intent intent = new Intent(getActivity(), BrowserActivity.class);
                                             intent.putExtra("url", url);
                                             intent.putExtra("title", shareTitle);
                                             startActivity(intent);

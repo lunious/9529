@@ -8,7 +8,6 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,10 +24,8 @@ import com.lubanjianye.biaoxuntong.database.DatabaseManager;
 import com.lubanjianye.biaoxuntong.database.UserProfile;
 import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
 import com.lubanjianye.biaoxuntong.sign.SignInActivity;
-import com.lubanjianye.biaoxuntong.ui.browser.BrowserDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.browser.BrowserActivity;
 import com.lubanjianye.biaoxuntong.ui.main.result.detail.chongqing.ResultCqsggjyzbjgDetailActivity;
-import com.lubanjianye.biaoxuntong.ui.main.result.detail.sichuan.ResultSggjyzbjgDetailActivity;
-import com.lubanjianye.biaoxuntong.ui.main.result.detail.sichuan.ResultXjgggDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.share.OpenBuilder;
 import com.lubanjianye.biaoxuntong.ui.share.OpenConstant;
 import com.lubanjianye.biaoxuntong.ui.share.Share;
@@ -678,13 +675,13 @@ public class IndexCqsggjyDetailFragment extends BaseFragment implements View.OnC
                 }
                 break;
             case R.id.tv_yw:
-                Intent intent = new Intent(getActivity(), BrowserDetailActivity.class);
+                Intent intent = new Intent(getActivity(), BrowserActivity.class);
                 intent.putExtra("url", shareUrl);
                 intent.putExtra("title", shareTitle);
                 startActivity(intent);
                 break;
             case R.id.tv_gzgg:
-                intent = new Intent(getActivity(), BrowserDetailActivity.class);
+                intent = new Intent(getActivity(), BrowserActivity.class);
                 intent.putExtra("url", gzUrl);
                 intent.putExtra("title", "更正公告");
                 startActivity(intent);

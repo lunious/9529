@@ -9,12 +9,9 @@ import com.lubanjianye.biaoxuntong.base.BaseFragment;
  * Created by 11645 on 2018/3/22.
  */
 
-public class BrowserDetailActivity extends BaseActivity {
+public class BrowserActivity extends BaseActivity {
     private String mUrl = "";
     private String mTitle = "";
-    private String mEntity = "";
-    private int mEntityid = -1;
-    private int favorite = -1;
 
     @Override
     public BaseFragment setRootFragment() {
@@ -22,12 +19,9 @@ public class BrowserDetailActivity extends BaseActivity {
         if (intent != null) {
             mUrl = intent.getStringExtra("url");
             mTitle = intent.getStringExtra("title");
-            mEntity = intent.getStringExtra("entity");
-            mEntityid = intent.getIntExtra("entityid",-1);
-            favorite = intent.getIntExtra("favorite",-1);
         }
 
-        final BrowserDetailFragment fragment = BrowserDetailFragment.create(mUrl, mTitle,mEntity,mEntityid,favorite);
+        final BrowserFragment fragment = BrowserFragment.create(mUrl, mTitle);
         return fragment;
     }
 }

@@ -32,10 +32,9 @@ import com.lubanjianye.biaoxuntong.database.UserProfile;
 import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
 import com.lubanjianye.biaoxuntong.api.BiaoXunTongApi;
 import com.lubanjianye.biaoxuntong.sign.SignInActivity;
-import com.lubanjianye.biaoxuntong.ui.browser.BrowserDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.browser.BrowserActivity;
 import com.lubanjianye.biaoxuntong.ui.dropdown.SpinerPopWindow;
 import com.lubanjianye.biaoxuntong.ui.main.user.avater.AvaterActivity;
-import com.lubanjianye.biaoxuntong.ui.message.MessageActivity;
 import com.lubanjianye.biaoxuntong.util.dialog.PromptButton;
 import com.lubanjianye.biaoxuntong.util.dialog.PromptButtonListener;
 import com.lubanjianye.biaoxuntong.util.dialog.PromptDialog;
@@ -549,7 +548,7 @@ public class QueryFragment extends BaseFragment implements View.OnClickListener 
         switch (view.getId()) {
             case R.id.vip_detail:
                 String VipUrl = "http://m.lubanjianye.com/home/index/vipservice.html";
-                Intent intent = new Intent(getActivity(), BrowserDetailActivity.class);
+                Intent intent = new Intent(getActivity(), BrowserActivity.class);
                 intent.putExtra("url", VipUrl);
                 intent.putExtra("title", "");
                 startActivity(intent);

@@ -267,7 +267,7 @@ public class CityPickerDialogFragment extends AppCompatDialogFragment implements
                     mOnPickListener.onPick(position, data);
                     dismiss();
                 }else {
-                    ToastUtil.shortToast(getContext(),"暂未支持该地区，敬请期待!");
+                    ToastUtil.shortToast(getContext(),"数据准备中，敬请期待!");
                 }
 
             }

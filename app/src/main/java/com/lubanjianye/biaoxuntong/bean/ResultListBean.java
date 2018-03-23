@@ -22,6 +22,16 @@ public class ResultListBean implements Serializable {
 
     private String url = null;
 
+    private int favorite = -1;
+
+    public int getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(int favorite) {
+        this.favorite = favorite;
+    }
+
     public String getUrl() {
         return url;
     }

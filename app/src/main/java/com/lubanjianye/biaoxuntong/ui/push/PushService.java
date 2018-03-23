@@ -9,7 +9,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.lubanjianye.biaoxuntong.R;
 import com.lubanjianye.biaoxuntong.app.BiaoXunTong;
-import com.lubanjianye.biaoxuntong.ui.browser.BrowserDetailActivity;
+import com.lubanjianye.biaoxuntong.ui.browser.BrowserActivity;
 import com.lubanjianye.biaoxuntong.ui.main.index.detail.sichuan.IndexBxtgdjDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.main.index.detail.sichuan.IndexSggjyDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.main.index.detail.sichuan.IndexSggjycgrowDetailActivity;
@@ -128,7 +128,7 @@ public class PushService extends MixPushIntentService {
         } else if ("2".equals(mType)) {
 
         } else if ("3".equals(mType)) {
-            intent = new Intent(getApplicationContext(), BrowserDetailActivity.class);
+            intent = new Intent(getApplicationContext(), BrowserActivity.class);
             intent.putExtra("url", mUrl);
             intent.putExtra("title", mTitle);
         }

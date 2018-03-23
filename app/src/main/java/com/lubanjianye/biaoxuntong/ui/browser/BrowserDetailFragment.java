@@ -1,24 +1,37 @@
 package com.lubanjianye.biaoxuntong.ui.browser;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.just.agentweb.AgentWeb;
-import com.just.agentweb.IAgentWebSettings;
 import com.lubanjianye.biaoxuntong.R;
+import com.lubanjianye.biaoxuntong.api.BiaoXunTongApi;
 import com.lubanjianye.biaoxuntong.base.BaseFragment;
+import com.lubanjianye.biaoxuntong.database.DatabaseManager;
+import com.lubanjianye.biaoxuntong.database.UserProfile;
+import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
+import com.lubanjianye.biaoxuntong.sign.SignInActivity;
+import com.lubanjianye.biaoxuntong.ui.share.Share;
+import com.lubanjianye.biaoxuntong.util.netStatus.AppSysMgr;
+import com.lubanjianye.biaoxuntong.util.sp.AppSharePreferenceMgr;
 import com.lubanjianye.biaoxuntong.util.toast.ToastUtil;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 /**
  * Created by 11645 on 2018/3/22.
@@ -31,22 +44,36 @@ public class BrowserDetailFragment extends BaseFragment implements View.OnClickL
     private AppCompatTextView mainTitle = null;
     private LinearLayout ll_webview = null;
     private AgentWeb webView = null;
-    private ImageView mImgBack = null;
-    private ImageView mImgForward = null;
-    private ImageView mImgRefresh = null;
-    private ImageView mImgSystemBrowser = null;
+
+    private ImageView ivFav = null;
+    private LinearLayout llFav = null;
+    private LinearLayout llShare = null;
+    private NestedScrollView detailNsv = null;
 
 
     private static final String ARG_URL = "ARG_URL";
     private static final String ARG_TITLE = "ARG_TITLE";
+    private static final String ENTITY = "ENTITY";
+    private static final String ENTITYID = "ENTITYID";
+    private static final String FAVORITE = "FAVORITE";
 
     public String mUrl = "";
     public String mTitle = "";
+    private int mEntityId = -1;
+    private int favorite = -1;
+    private String mEntity = "";
+    private int myFav = -1;
+    private String mDiqu = "";
+    private String deviceId = AppSysMgr.getPsuedoUniqueID();
 
-    public static BrowserDetailFragment create(@NonNull String url, String title) {
+
+    public static BrowserDetailFragment create(@NonNull String url, String title,String entity,int entityid,int favorite) {
         final Bundle args = new Bundle();
         args.putString(ARG_URL, url);
         args.putString(ARG_TITLE, title);
+        args.putString(ENTITY,entity);
+        args.putInt(ENTITYID,entityid);
+        args.putInt(FAVORITE,favorite);
         final BrowserDetailFragment fragment = new BrowserDetailFragment();
         fragment.setArguments(args);
         return fragment;
@@ -63,15 +90,17 @@ public class BrowserDetailFragment extends BaseFragment implements View.OnClickL
         mBack = getView().findViewById(R.id.ll_iv_back);
         mainTitle = getView().findViewById(R.id.main_bar_name);
         ll_webview = getView().findViewById(R.id.ll_webview);
-        mImgBack = getView().findViewById(R.id.browser_back);
-        mImgForward = getView().findViewById(R.id.browser_forward);
-        mImgRefresh = getView().findViewById(R.id.browser_refresh);
-        mImgSystemBrowser = getView().findViewById(R.id.browser_system_browser);
+        ivFav = getView().findViewById(R.id.iv_fav);
+        llFav = getView().findViewById(R.id.ll_fav);
+        llShare = getView().findViewById(R.id.ll_share);
+        detailNsv = getView().findViewById(R.id.detail_nsv);
         mBack.setOnClickListener(this);
-        mImgBack.setOnClickListener(this);
-        mImgForward.setOnClickListener(this);
-        mImgRefresh.setOnClickListener(this);
-        mImgSystemBrowser.setOnClickListener(this);
+        llShare.setOnClickListener(this);
+        llFav.setOnClickListener(this);
+
+        if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOCA_AREA)) {
+            mDiqu = (String) AppSharePreferenceMgr.get(getContext(), EventMessage.LOCA_AREA, "");
+        }
 
 
     }
@@ -83,13 +112,13 @@ public class BrowserDetailFragment extends BaseFragment implements View.OnClickL
         if (args != null) {
             mUrl = args.getString(ARG_URL);
             mTitle = args.getString(ARG_TITLE);
+            mEntity = args.getString(ENTITY);
+            mEntityId = args.getInt(ENTITYID);
+            favorite = args.getInt(FAVORITE);
         }
 
-        if (!TextUtils.isEmpty(mTitle)) {
-            mainTitle.setText(mTitle);
-        } else {
-            mainTitle.setText("鲁班标讯通");
-        }
+            mainTitle.setText("");
+
     }
 
     @Override
@@ -100,36 +129,132 @@ public class BrowserDetailFragment extends BaseFragment implements View.OnClickL
                 .createAgentWeb()
                 .ready()
                 .go(mUrl);
+        initNsv();
 
+        Log.d("IUBAUISBDASDA",favorite+"");
+
+        if (favorite == 1) {
+            ivFav.setImageResource(R.mipmap.ic_faved_pressed);
+        } else if (favorite == 0) {
+            ivFav.setImageResource(R.mipmap.ic_fav_pressed);
+        }
+
+    }
+
+    private void initNsv() {
+        detailNsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY > oldScrollY) {
+                    // 向下滑动
+
+                    mainTitle.setText(mTitle);
+                }
+
+                if (scrollY < oldScrollY) {
+                    // 向上滑动
+                }
+
+                if (scrollY == 0) {
+                    // 顶部
+                    mainTitle.setText("");
+                }
+
+                if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+                    // 底部
+                    mainTitle.setText(mTitle);
+                }
+            }
+        });
     }
 
 
 
-
+    private Share mShare = new Share();
 
     @Override
     public void onClick(View view) {
+        mShare.setAppName("鲁班标讯通");
+        mShare.setAppShareIcon(R.mipmap.ic_share);
+        if (mShare.getBitmapResID() == 0) {
+            mShare.setBitmapResID(R.mipmap.ic_share);
+        }
+        mShare.setTitle(mTitle);
+        mShare.setContent(mTitle);
+        mShare.setSummary(mTitle);
+        mShare.setDescription(mTitle);
+        mShare.setImageUrl(null);
+//        mShare.setUrl(BiaoXunTongApi.SHARE_URL + mUrl);
+        mShare.setUrl(mUrl);
         switch (view.getId()) {
             case R.id.ll_iv_back:
                 getActivity().onBackPressed();
                 break;
-            case R.id.browser_back:
-                webView.back();
+            case R.id.ll_share:
+                toShare(mEntityId, mTitle, mTitle,  mUrl);
                 break;
-            case R.id.browser_forward:
-                //
-                break;
-            case R.id.browser_refresh:
-                webView.getUrlLoader().reload();
-                break;
-            case R.id.browser_system_browser:
-                try {
-                    // 启用外部浏览器
-                    Uri uri = Uri.parse(mUrl);
-                    Intent it = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(it);
-                } catch (Exception e) {
-                    ToastUtil.shortToast(getContext(), "网页地址错误");
+            case R.id.ll_fav:
+
+                if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOGIN_SUCCSS)) {
+                    //已登录处理事件
+                    List<UserProfile> users = DatabaseManager.getInstance().getDao().loadAll();
+                    long id = 0;
+                    for (int i = 0; i < users.size(); i++) {
+                        id = users.get(0).getId();
+                    }
+
+                    if (favorite == 1) {
+
+                        OkGo.<String>post(BiaoXunTongApi.URL_DELEFAV)
+                                .params("entityid", mEntityId)
+                                .params("entity", mEntity)
+                                .params("userid", id)
+                                .params("diqu",mDiqu)
+                                .params("deviceId", deviceId)
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onSuccess(Response<String> response) {
+                                        final JSONObject object = JSON.parseObject(response.body());
+                                        String status = object.getString("status");
+                                        if ("200".equals(status)) {
+                                            ivFav.setImageResource(R.mipmap.ic_fav_pressed);
+                                            ToastUtil.shortToast(getContext(), "取消收藏");
+                                            EventBus.getDefault().post(new EventMessage(EventMessage.CLICK_FAV));
+                                        } else if ("500".equals(status)) {
+                                            ToastUtil.shortToast(getContext(), "服务器异常");
+                                        }
+                                    }
+                                });
+
+                    } else if (favorite == 0) {
+
+                        OkGo.<String>post(BiaoXunTongApi.URL_ADDFAV)
+                                .params("entityid", mEntityId)
+                                .params("entity", mEntity)
+                                .params("userid", id)
+                                .params("diqu",mDiqu)
+                                .params("deviceId", deviceId)
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onSuccess(Response<String> response) {
+                                        final JSONObject object = JSON.parseObject(response.body());
+                                        String status = object.getString("status");
+                                        if ("200".equals(status)) {
+                                            ivFav.setImageResource(R.mipmap.ic_faved_pressed);
+                                            ToastUtil.shortToast(getContext(), "收藏成功");
+                                            EventBus.getDefault().post(new EventMessage(EventMessage.CLICK_FAV));
+                                        } else if ("500".equals(status)) {
+                                            ToastUtil.shortToast(getContext(), "服务器异常");
+                                        }
+                                    }
+                                });
+
+                    }else {
+                        ToastUtil.shortToast(getContext(),"未知收藏状态");
+                    }
+                } else {
+                    //未登录去登陆
+                    startActivity(new Intent(getActivity(), SignInActivity.class));
                 }
                 break;
             default:
