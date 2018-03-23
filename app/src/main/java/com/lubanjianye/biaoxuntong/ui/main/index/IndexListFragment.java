@@ -146,13 +146,9 @@ public class IndexListFragment extends BaseFragment {
                 final IndexListBean data = (IndexListBean) adapter.getData().get(position);
                 final int entityId = data.getEntityId();
                 final String entity = data.getEntity();
-                final int favorite = data.getFavorite();
-
-                Log.d("BASJHDHJSADASDA", entity + entityId+"BASJHDHJSADASDA==="+favorite);
-
 
                 Intent intent = null;
-                if (mDiqu.equals("四川")){
+                if (mDiqu.equals("四川")) {
                     if ("sggjy".equals(entity)) {
                         intent = new Intent(BiaoXunTong.getApplicationContext(), IndexSggjyDetailActivity.class);
                         intent.putExtra("entityId", entityId);
@@ -197,18 +193,16 @@ public class IndexListFragment extends BaseFragment {
                         intent.putExtra("mId", "");
                         startActivity(intent);
                     }
-                }else if (mDiqu.equals("重庆")){
-                    if ("cqcggg".equals(entity)){
-                        final String url = data.getUrl();
+                } else if (mDiqu.equals("重庆")) {
+                    if ("cqcggg".equals(entity)) {
                         final String title = data.getEntryName();
                         intent = new Intent(getActivity(), BrowserDetailActivity.class);
-                        intent.putExtra("url", url);
+                        intent.putExtra("api", BiaoXunTongApi.URL_GETCOLLECTIONLISTDETAIL);
                         intent.putExtra("title", title);
-                        intent.putExtra("entity",entity);
-                        intent.putExtra("entityid",entityId);
-                        intent.putExtra("favorite",favorite);
+                        intent.putExtra("entity", entity);
+                        intent.putExtra("entityid", entityId);
                         startActivity(intent);
-                    }else if ("cqsggjy".equals(entity)){
+                    } else if ("cqsggjy".equals(entity)) {
                         intent = new Intent(BiaoXunTong.getApplicationContext(), IndexCqsggjyDetailActivity.class);
                         intent.putExtra("entityId", entityId);
                         intent.putExtra("entity", entity);
@@ -290,7 +284,7 @@ public class IndexListFragment extends BaseFragment {
         if ("sx".equals(message.getMessage())) {
             //更新UI
             indexRefresh.autoRefresh();
-        }else if (EventMessage.CLICK_FAV.equals(message.getMessage())){
+        } else if (EventMessage.CLICK_FAV.equals(message.getMessage())) {
             requestData(true);
         }
 
@@ -667,8 +661,6 @@ public class IndexListFragment extends BaseFragment {
                 bean.setEntity(list.getString("entity"));
                 bean.setDeadTime(list.getString("deadTime"));
                 bean.setAddress(list.getString("address"));
-                bean.setUrl(list.getString("url"));
-                bean.setFavorite(list.getInteger("favorite"));
                 if ("最新标讯".equals(mTitle)) {
                     bean.setType(list.getString("type"));
                 }
@@ -691,8 +683,6 @@ public class IndexListFragment extends BaseFragment {
                     bean.setEntity(list.getString("entity"));
                     bean.setDeadTime(list.getString("deadTime"));
                     bean.setAddress(list.getString("address"));
-                    bean.setUrl(list.getString("url"));
-                    bean.setFavorite(list.getInteger("favorite"));
                     if ("最新标讯".equals(mTitle)) {
                         bean.setType(list.getString("type"));
                     }

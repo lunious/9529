@@ -365,14 +365,12 @@ public class CollectionTabFragment extends BaseFragment implements View.OnClickL
                     }
                 } else if ("重庆".equals(mDiqu)) {
                     if ("cqcggg".equals(entity)) {
-                        final String url = data.getUrl();
                         final String title = data.getEntryName();
                         intent = new Intent(getActivity(), BrowserDetailActivity.class);
-                        intent.putExtra("url", url);
+                        intent.putExtra("api", BiaoXunTongApi.URL_GETCOLLECTIONLISTDETAIL);
                         intent.putExtra("title", title);
-                        intent.putExtra("entity",entity);
-                        intent.putExtra("entityid",entityId);
-                        intent.putExtra("favorite",1);
+                        intent.putExtra("entity", entity);
+                        intent.putExtra("entityid", entityId);
                         startActivity(intent);
                     } else if ("cqsggjy".equals(entity)) {
                         intent = new Intent(BiaoXunTong.getApplicationContext(), IndexCqsggjyDetailActivity.class);

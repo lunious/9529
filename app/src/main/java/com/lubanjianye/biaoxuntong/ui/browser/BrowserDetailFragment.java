@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatTextView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,6 +21,7 @@ import com.lubanjianye.biaoxuntong.database.UserProfile;
 import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
 import com.lubanjianye.biaoxuntong.sign.SignInActivity;
 import com.lubanjianye.biaoxuntong.ui.share.Share;
+import com.lubanjianye.biaoxuntong.util.aes.AesUtil;
 import com.lubanjianye.biaoxuntong.util.netStatus.AppSysMgr;
 import com.lubanjianye.biaoxuntong.util.sp.AppSharePreferenceMgr;
 import com.lubanjianye.biaoxuntong.util.toast.ToastUtil;
@@ -55,25 +55,24 @@ public class BrowserDetailFragment extends BaseFragment implements View.OnClickL
     private static final String ARG_TITLE = "ARG_TITLE";
     private static final String ENTITY = "ENTITY";
     private static final String ENTITYID = "ENTITYID";
-    private static final String FAVORITE = "FAVORITE";
 
+    public String mApi = "";
     public String mUrl = "";
     public String mTitle = "";
     private int mEntityId = -1;
-    private int favorite = -1;
     private String mEntity = "";
     private int myFav = -1;
     private String mDiqu = "";
     private String deviceId = AppSysMgr.getPsuedoUniqueID();
+    private String ajaxType = "0";
 
 
-    public static BrowserDetailFragment create(@NonNull String url, String title,String entity,int entityid,int favorite) {
+    public static BrowserDetailFragment create(@NonNull String api, String title, String entity, int entityid) {
         final Bundle args = new Bundle();
-        args.putString(ARG_URL, url);
+        args.putString(ARG_URL, api);
         args.putString(ARG_TITLE, title);
-        args.putString(ENTITY,entity);
-        args.putInt(ENTITYID,entityid);
-        args.putInt(FAVORITE,favorite);
+        args.putString(ENTITY, entity);
+        args.putInt(ENTITYID, entityid);
         final BrowserDetailFragment fragment = new BrowserDetailFragment();
         fragment.setArguments(args);
         return fragment;
@@ -110,64 +109,116 @@ public class BrowserDetailFragment extends BaseFragment implements View.OnClickL
         mBack.setVisibility(View.VISIBLE);
         final Bundle args = getArguments();
         if (args != null) {
-            mUrl = args.getString(ARG_URL);
+            mApi = args.getString(ARG_URL);
             mTitle = args.getString(ARG_TITLE);
             mEntity = args.getString(ENTITY);
             mEntityId = args.getInt(ENTITYID);
-            favorite = args.getInt(FAVORITE);
         }
 
-            mainTitle.setText("");
+        mainTitle.setText(mTitle);
+
+        requestData();
 
     }
 
     @Override
     public void initEvent() {
-        webView = AgentWeb.with(this)
-                .setAgentWebParent(ll_webview, new LinearLayout.LayoutParams(-1, -1))
-                .useDefaultIndicator(getResources().getColor(R.color.main_status_red),3)
-                .createAgentWeb()
-                .ready()
-                .go(mUrl);
-        initNsv();
-
-        Log.d("IUBAUISBDASDA",favorite+"");
-
-        if (favorite == 1) {
-            ivFav.setImageResource(R.mipmap.ic_faved_pressed);
-        } else if (favorite == 0) {
-            ivFav.setImageResource(R.mipmap.ic_fav_pressed);
-        }
 
     }
 
-    private void initNsv() {
-        detailNsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY > oldScrollY) {
-                    // 向下滑动
+    private long id = 0;
+    private String nickName = "";
+    private String token = "";
+    private String comid = "";
+    private String imageUrl = "";
 
-                    mainTitle.setText(mTitle);
-                }
+    private void requestData() {
+        if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOGIN_SUCCSS)) {
+            List<UserProfile> users = DatabaseManager.getInstance().getDao().loadAll();
 
-                if (scrollY < oldScrollY) {
-                    // 向上滑动
-                }
-
-                if (scrollY == 0) {
-                    // 顶部
-                    mainTitle.setText("");
-                }
-
-                if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
-                    // 底部
-                    mainTitle.setText(mTitle);
-                }
+            for (int i = 0; i < users.size(); i++) {
+                id = users.get(0).getId();
+                nickName = users.get(0).getNickName();
+                token = users.get(0).getToken();
+                comid = users.get(0).getComid();
+                imageUrl = users.get(0).getImageUrl();
             }
-        });
-    }
 
+            OkGo.<String>post(mApi)
+                    .params("entityId", mEntityId)
+                    .params("entity", mEntity)
+                    .params("userid", id)
+                    .params("diqu", mDiqu)
+                    .params("deviceId", deviceId)
+                    .params("ajaxlogtype", ajaxType)
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                            String jiemi = AesUtil.aesDecrypt(response.body(), BiaoXunTongApi.PAS_KEY);
+
+                            //判断是否收藏过
+                            final JSONObject object = JSON.parseObject(jiemi);
+                            String status = object.getString("status");
+                            int favorite = object.getInteger("favorite");
+                            if (favorite == 1) {
+                                myFav = 1;
+                                ivFav.setImageResource(R.mipmap.ic_faved_pressed);
+                            } else if (favorite == 0) {
+                                myFav = 0;
+                                ivFav.setImageResource(R.mipmap.ic_fav_pressed);
+                            }
+
+                            if ("200".equals(status)) {
+                                final JSONObject data = object.getJSONObject("data");
+                                mUrl = data.getString("url");
+
+
+                                webView = AgentWeb.with(BrowserDetailFragment.this)
+                                        .setAgentWebParent(ll_webview, new LinearLayout.LayoutParams(-1, -1))
+                                        .useDefaultIndicator(getResources().getColor(R.color.main_status_red), 3)
+                                        .createAgentWeb()
+                                        .ready()
+                                        .go(mUrl);
+
+                            } else {
+
+                            }
+                        }
+                    });
+
+        } else {
+
+            OkGo.<String>post(mApi)
+                    .params("entityId", mEntityId)
+                    .params("entity", mEntity)
+                    .params("diqu", mDiqu)
+                    .params("deviceId", deviceId)
+                    .params("ajaxlogtype", ajaxType)
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                            String jiemi = AesUtil.aesDecrypt(response.body(), BiaoXunTongApi.PAS_KEY);
+
+                            final JSONObject object = JSON.parseObject(jiemi);
+                            String status = object.getString("status");
+
+                            if ("200".equals(status)) {
+                                final JSONObject data = object.getJSONObject("data");
+                                mUrl = data.getString("url");
+
+                                webView = AgentWeb.with(BrowserDetailFragment.this)
+                                        .setAgentWebParent(ll_webview, new LinearLayout.LayoutParams(-1, -1))
+                                        .useDefaultIndicator(getResources().getColor(R.color.main_status_red), 3)
+                                        .createAgentWeb()
+                                        .ready()
+                                        .go(mUrl);
+                            } else {
+
+                            }
+                        }
+                    });
+        }
+    }
 
 
     private Share mShare = new Share();
@@ -191,7 +242,7 @@ public class BrowserDetailFragment extends BaseFragment implements View.OnClickL
                 getActivity().onBackPressed();
                 break;
             case R.id.ll_share:
-                toShare(mEntityId, mTitle, mTitle,  mUrl);
+                toShare(mEntityId, mTitle, mTitle, mUrl);
                 break;
             case R.id.ll_fav:
 
@@ -203,13 +254,13 @@ public class BrowserDetailFragment extends BaseFragment implements View.OnClickL
                         id = users.get(0).getId();
                     }
 
-                    if (favorite == 1) {
+                    if (myFav == 1) {
 
                         OkGo.<String>post(BiaoXunTongApi.URL_DELEFAV)
                                 .params("entityid", mEntityId)
                                 .params("entity", mEntity)
                                 .params("userid", id)
-                                .params("diqu",mDiqu)
+                                .params("diqu", mDiqu)
                                 .params("deviceId", deviceId)
                                 .execute(new StringCallback() {
                                     @Override
@@ -217,6 +268,7 @@ public class BrowserDetailFragment extends BaseFragment implements View.OnClickL
                                         final JSONObject object = JSON.parseObject(response.body());
                                         String status = object.getString("status");
                                         if ("200".equals(status)) {
+                                            myFav = 0;
                                             ivFav.setImageResource(R.mipmap.ic_fav_pressed);
                                             ToastUtil.shortToast(getContext(), "取消收藏");
                                             EventBus.getDefault().post(new EventMessage(EventMessage.CLICK_FAV));
@@ -226,13 +278,13 @@ public class BrowserDetailFragment extends BaseFragment implements View.OnClickL
                                     }
                                 });
 
-                    } else if (favorite == 0) {
+                    } else if (myFav == 0) {
 
                         OkGo.<String>post(BiaoXunTongApi.URL_ADDFAV)
                                 .params("entityid", mEntityId)
                                 .params("entity", mEntity)
                                 .params("userid", id)
-                                .params("diqu",mDiqu)
+                                .params("diqu", mDiqu)
                                 .params("deviceId", deviceId)
                                 .execute(new StringCallback() {
                                     @Override
@@ -240,6 +292,7 @@ public class BrowserDetailFragment extends BaseFragment implements View.OnClickL
                                         final JSONObject object = JSON.parseObject(response.body());
                                         String status = object.getString("status");
                                         if ("200".equals(status)) {
+                                            myFav = 1;
                                             ivFav.setImageResource(R.mipmap.ic_faved_pressed);
                                             ToastUtil.shortToast(getContext(), "收藏成功");
                                             EventBus.getDefault().post(new EventMessage(EventMessage.CLICK_FAV));
@@ -249,8 +302,8 @@ public class BrowserDetailFragment extends BaseFragment implements View.OnClickL
                                     }
                                 });
 
-                    }else {
-                        ToastUtil.shortToast(getContext(),"未知收藏状态");
+                    } else {
+                        ToastUtil.shortToast(getContext(), "未知收藏状态");
                     }
                 } else {
                     //未登录去登陆

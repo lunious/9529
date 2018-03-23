@@ -22,6 +22,7 @@ import com.lubanjianye.biaoxuntong.database.DatabaseManager;
 import com.lubanjianye.biaoxuntong.database.UserProfile;
 import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
 import com.lubanjianye.biaoxuntong.ui.browser.BrowserActivity;
+import com.lubanjianye.biaoxuntong.ui.browser.BrowserDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.main.result.detail.chongqing.ResultCqsggjyzbjgDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.view.loadmore.CustomLoadMoreView;
 import com.lubanjianye.biaoxuntong.api.BiaoXunTongApi;
@@ -124,11 +125,12 @@ public class ResultSearchFragment extends BaseFragment {
                     }
                 }else if("重庆".equals(mDiqu)){
                     if ("cqcggg".equals(entity)){
-                        final String url = data.getUrl();
                         final String title = data.getEntryName();
-                        intent = new Intent(getActivity(), BrowserActivity.class);
-                        intent.putExtra("url",url);
+                        intent = new Intent(getActivity(), BrowserDetailActivity.class);
+                        intent.putExtra("api",BiaoXunTongApi.URL_GETRESULTLISTDETAIL);
                         intent.putExtra("title", title);
+                        intent.putExtra("entity",entity);
+                        intent.putExtra("entityid",entityId);
                         startActivity(intent);
                     }else if ("cqsggjyzbjg".equals(entity)){
                         intent = new Intent(BiaoXunTong.getApplicationContext(), ResultCqsggjyzbjgDetailActivity.class);
@@ -352,7 +354,6 @@ public class ResultSearchFragment extends BaseFragment {
                 bean.setSysTime(list.getString("sysTime"));
                 bean.setEntityid(list.getInteger("entityid"));
                 bean.setEntity(list.getString("entity"));
-                bean.setUrl(list.getString("url"));
                 mDataList.add(bean);
             }
             resultRefresh.setRefreshing(false);
@@ -369,7 +370,6 @@ public class ResultSearchFragment extends BaseFragment {
                     bean.setSysTime(list.getString("sysTime"));
                     bean.setEntityid(list.getInteger("entityid"));
                     bean.setEntity(list.getString("entity"));
-                    bean.setUrl(list.getString("url"));
                     mDataList.add(bean);
                 }
                 mAdapter.notifyDataSetChanged();

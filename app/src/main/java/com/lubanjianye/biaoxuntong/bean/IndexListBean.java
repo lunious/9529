@@ -22,25 +22,7 @@ public class IndexListBean implements Serializable{
     private String deadTime = null;
     private String signstauts = null;
     private String address = null;
-    private String url = null;
 
-    private int favorite = -1;
-
-    public int getFavorite() {
-        return favorite;
-    }
-
-    public void setFavorite(int favorite) {
-        this.favorite = favorite;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
 
     public int getId() {
         return id;

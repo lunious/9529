@@ -20,6 +20,9 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+#ImmersionBar
+-keep class com.gyf.barlibrary.* {*;}
+
 #AgentWeb
 -keep class com.just.agentweb.** {
     *;

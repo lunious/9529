@@ -31,6 +31,7 @@ import com.lubanjianye.biaoxuntong.database.UserProfile;
 import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
 import com.lubanjianye.biaoxuntong.api.BiaoXunTongApi;
 import com.lubanjianye.biaoxuntong.ui.browser.BrowserActivity;
+import com.lubanjianye.biaoxuntong.ui.browser.BrowserDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.main.index.detail.chongqing.IndexCqsggjyDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.view.loadmore.CustomLoadMoreView;
 import com.lubanjianye.biaoxuntong.ui.dropdown.SpinerPopWindow;
@@ -277,11 +278,12 @@ public class IndexSearchFragment extends BaseFragment implements View.OnClickLis
                     }
                 }else if ("重庆".equals(mDiqu)){
                     if ("cqcggg".equals(entity)){
-                        final String url = data.getUrl();
                         final String title = data.getEntryName();
-                        intent = new Intent(getActivity(), BrowserActivity.class);
-                        intent.putExtra("url", url);
+                        intent = new Intent(getActivity(), BrowserDetailActivity.class);
+                        intent.putExtra("api", BiaoXunTongApi.URL_GETCOLLECTIONLISTDETAIL);
                         intent.putExtra("title", title);
+                        intent.putExtra("entity", entity);
+                        intent.putExtra("entityid", entityId);
                         startActivity(intent);
                     }else if ("cqsggjy".equals(entity)){
                         intent = new Intent(BiaoXunTong.getApplicationContext(), IndexCqsggjyDetailActivity.class);

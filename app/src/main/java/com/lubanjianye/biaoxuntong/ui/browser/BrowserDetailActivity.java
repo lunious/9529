@@ -10,24 +10,22 @@ import com.lubanjianye.biaoxuntong.base.BaseFragment;
  */
 
 public class BrowserDetailActivity extends BaseActivity {
-    private String mUrl = "";
+    private String mApi = "";
     private String mTitle = "";
     private String mEntity = "";
     private int mEntityid = -1;
-    private int favorite = -1;
 
     @Override
     public BaseFragment setRootFragment() {
         Intent intent = getIntent();
         if (intent != null) {
-            mUrl = intent.getStringExtra("url");
+            mApi = intent.getStringExtra("api");
             mTitle = intent.getStringExtra("title");
             mEntity = intent.getStringExtra("entity");
-            mEntityid = intent.getIntExtra("entityid",-1);
-            favorite = intent.getIntExtra("favorite",-1);
+            mEntityid = intent.getIntExtra("entityid", -1);
         }
 
-        final BrowserDetailFragment fragment = BrowserDetailFragment.create(mUrl, mTitle,mEntity,mEntityid,favorite);
+        final BrowserDetailFragment fragment = BrowserDetailFragment.create(mApi, mTitle, mEntity, mEntityid);
         return fragment;
     }
 }

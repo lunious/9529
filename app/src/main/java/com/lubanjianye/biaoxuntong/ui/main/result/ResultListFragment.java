@@ -21,7 +21,6 @@ import com.lubanjianye.biaoxuntong.database.DatabaseManager;
 import com.lubanjianye.biaoxuntong.database.UserProfile;
 import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
 import com.lubanjianye.biaoxuntong.api.BiaoXunTongApi;
-import com.lubanjianye.biaoxuntong.ui.browser.BrowserActivity;
 import com.lubanjianye.biaoxuntong.ui.browser.BrowserDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.main.result.detail.chongqing.ResultCqsggjyzbjgDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.view.loadmore.CustomLoadMoreView;
@@ -107,7 +106,6 @@ public class ResultListFragment extends BaseFragment {
                 final ResultListBean data = (ResultListBean) adapter.getData().get(position);
                 final int entityId = data.getEntityid();
                 final String entity = data.getEntity();
-                final int favorite = data.getFavorite();
 
                 Log.d("JASBHDBHSABDSADSAD", entityId + "___" + entity);
 
@@ -132,14 +130,12 @@ public class ResultListFragment extends BaseFragment {
                     }
                 }else if (mDiqu.equals("重庆")){
                     if ("cqcggg".equals(entity)){
-                        final String url = data.getUrl();
                         final String title = data.getEntryName();
                         intent = new Intent(getActivity(), BrowserDetailActivity.class);
-                        intent.putExtra("url",url);
+                        intent.putExtra("api", BiaoXunTongApi.URL_GETRESULTLISTDETAIL);
                         intent.putExtra("title", title);
                         intent.putExtra("entity",entity);
                         intent.putExtra("entityid",entityId);
-                        intent.putExtra("favorite",favorite);
                         startActivity(intent);
                     }else if ("cqsggjyzbjg".equals(entity)){
                         intent = new Intent(BiaoXunTong.getApplicationContext(), ResultCqsggjyzbjgDetailActivity.class);
@@ -219,10 +215,7 @@ public class ResultListFragment extends BaseFragment {
         if (EventMessage.LOCA_AREA_CHANGE.equals(message.getMessage())) {
 
             requestData(true);
-        }else if (EventMessage.CLICK_FAV.equals(message.getMessage())){
-            requestData(true);
         }
-
 
     }
 
@@ -507,8 +500,6 @@ public class ResultListFragment extends BaseFragment {
                 bean.setSysTime(list.getString("sysTime"));
                 bean.setEntityid(list.getInteger("entityid"));
                 bean.setEntity(list.getString("entity"));
-                bean.setUrl(list.getString("url"));
-                bean.setFavorite(list.getInteger("favorite"));
                 mDataList.add(bean);
             }
 
@@ -527,8 +518,6 @@ public class ResultListFragment extends BaseFragment {
                     bean.setSysTime(list.getString("sysTime"));
                     bean.setEntityid(list.getInteger("entityid"));
                     bean.setEntity(list.getString("entity"));
-                    bean.setUrl(list.getString("url"));
-                    bean.setFavorite(list.getInteger("favorite"));
                     mDataList.add(bean);
                 }
             }
