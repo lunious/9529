@@ -1,10 +1,12 @@
 package com.lubanjianye.biaoxuntong.ui.message;
 
 import android.content.Intent;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -21,6 +23,7 @@ import com.lubanjianye.biaoxuntong.bean.ResultListBean;
 import com.lubanjianye.biaoxuntong.database.DatabaseManager;
 import com.lubanjianye.biaoxuntong.database.UserProfile;
 import com.lubanjianye.biaoxuntong.eventbus.EventMessage;
+import com.lubanjianye.biaoxuntong.sign.SignInActivity;
 import com.lubanjianye.biaoxuntong.ui.browser.BrowserDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.main.index.detail.chongqing.IndexCqsggjyDetailActivity;
 import com.lubanjianye.biaoxuntong.ui.main.index.detail.sichuan.IndexBxtgdjDetailActivity;
@@ -56,12 +59,16 @@ import java.util.List;
  * Created by 11645 on 2018/3/21.
  */
 
-public class MessageListFragment extends BaseFragment {
+public class MessageListFragment extends BaseFragment implements View.OnClickListener {
 
 
     private RecyclerView messageRecycler = null;
     private SmartRefreshLayout messageRefresh = null;
     private MultipleStatusView loadingStatus = null;
+
+    private AppCompatButton btnToLogin = null;
+    private LinearLayout llShow = null;
+
 
     private String mTitle = null;
     private int mType = -1;
@@ -250,6 +257,13 @@ public class MessageListFragment extends BaseFragment {
         messageRecycler = getView().findViewById(R.id.message_recycler);
         messageRefresh = getView().findViewById(R.id.message_refresh);
         loadingStatus = getView().findViewById(R.id.message_list_status_view);
+
+        btnToLogin = getView().findViewById(R.id.btn_to_login);
+        llShow = getView().findViewById(R.id.ll_show);
+
+        btnToLogin.setOnClickListener(this);
+
+
     }
     @Override
     public void onDestroyView() {
@@ -262,9 +276,33 @@ public class MessageListFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void XXXXXX(EventMessage message) {
 
-        if (EventMessage.LOCA_AREA_CHANGE.equals(message.getMessage())) {
+        if (EventMessage.LOGIN_SUCCSS.equals(message.getMessage()) || EventMessage.CLICK_FAV.equals(message.getMessage())
+                || EventMessage.LOCA_AREA_CHANGE.equals(message.getMessage())) {
 
-//            requestData(true);
+
+            if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOCA_AREA)) {
+                mDiqu = (String) AppSharePreferenceMgr.get(getContext(), EventMessage.LOCA_AREA, "");
+            }
+            //登陆成功后更新UI
+            if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOGIN_SUCCSS)) {
+                if (llShow != null) {
+                    llShow.setVisibility(View.GONE);
+                }
+
+                initAdapter();
+                initRefreshLayout();
+                mAdapter.setEnableLoadMore(false);
+                requestData(true);
+            } else {
+                if (llShow != null) {
+                    llShow.setVisibility(View.VISIBLE);
+                }
+            }
+
+        } else if (EventMessage.LOGIN_OUT.equals(message.getMessage())) {
+            if (llShow != null) {
+                llShow.setVisibility(View.VISIBLE);
+            }
         }
 
     }
@@ -318,102 +356,11 @@ public class MessageListFragment extends BaseFragment {
 
     public void requestData(final boolean isRefresh) {
 
+        Log.d("JBAUSJDASDADA",mType+"");
+
         if (mType == 1){
-            if (isRefresh) {
-                page = 1;
-                OkGo.<String>post(BiaoXunTongApi.URL_GETUILIST)
-                        .params("type", mType)
-                        .params("page", page)
-                        .params("diqu", mDiqu)
-                        .params("size", 10)
-                        .params("deviceId", deviceId)
-                        .cacheKey("message_login_cache" + mTitle + mDiqu)
-                        .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
-                        .cacheTime(3600 * 72000)
-                        .execute(new StringCallback() {
-                            @Override
-                            public void onSuccess(Response<String> response) {
-
-                                final JSONObject object = JSON.parseObject(response.body());
-                                final JSONObject data = object.getJSONObject("data");
-                                final JSONArray array = data.getJSONArray("list");
-                                final boolean nextPage = data.getBoolean("nextpage");
-
-                                if (array.size() > 0) {
-                                    page = 2;
-                                    setData(isRefresh, array, nextPage);
-                                } else {
-                                    if (mDataList != null) {
-                                        mDataList.clear();
-                                        mAdapter.notifyDataSetChanged();
-                                    }
-                                    //TODO 内容为空的处理
-                                    loadingStatus.showEmpty();
-                                    messageRefresh.setEnableRefresh(false);
-                                }
-
-                            }
-
-                            @Override
-                            public void onCacheSuccess(Response<String> response) {
-                                if (!isInitCache) {
-
-                                    final JSONObject object = JSON.parseObject(response.body());
-                                    final JSONObject data = object.getJSONObject("data");
-                                    final JSONArray array = data.getJSONArray("list");
-                                    final boolean nextPage = data.getBoolean("nextpage");
-
-                                    if (array.size() > 0) {
-                                        setData(isRefresh, array, nextPage);
-                                    } else {
-                                        if (mDataList != null) {
-                                            mDataList.clear();
-                                            mAdapter.notifyDataSetChanged();
-                                        }
-                                        //TODO 内容为空的处理
-                                        loadingStatus.showEmpty();
-                                        messageRefresh.setEnableRefresh(false);
-                                    }
-
-                                    isInitCache = true;
-                                }
-                            }
-                        });
-
-            } else {
-                OkGo.<String>post(BiaoXunTongApi.URL_GETUILIST)
-                        .params("type", mType)
-                        .params("page", page)
-                        .params("diqu", mDiqu)
-                        .params("size", 10)
-                        .params("deviceId", deviceId)
-                        .execute(new StringCallback() {
-                            @Override
-                            public void onSuccess(Response<String> response) {
-
-                                final JSONObject object = JSON.parseObject(response.body());
-                                final JSONObject data = object.getJSONObject("data");
-                                final JSONArray array = data.getJSONArray("list");
-                                final boolean nextPage = data.getBoolean("nextpage");
-
-                                if (array.size() > 0) {
-                                    setData(isRefresh, array, nextPage);
-                                } else {
-                                    if (mDataList != null) {
-                                        mDataList.clear();
-                                        mAdapter.notifyDataSetChanged();
-                                    }
-                                    //TODO 内容为空的处理
-                                    loadingStatus.showEmpty();
-                                    messageRefresh.setEnableRefresh(false);
-                                }
-
-                            }
-                        });
-            }
-
-        }else if (mType == 2){
             if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOGIN_SUCCSS)) {
+                llShow.setVisibility(View.GONE);
                 //已登录的数据请求
                 List<UserProfile> users = DatabaseManager.getInstance().getDao().loadAll();
 
@@ -425,7 +372,129 @@ public class MessageListFragment extends BaseFragment {
                     page = 1;
                     OkGo.<String>post(BiaoXunTongApi.URL_GETUILIST)
                             .params("type", mType)
-                            .params("userid", id)
+                            .params("userId", id)
+                            .params("page", page)
+                            .params("diqu", mDiqu)
+                            .params("size", 10)
+                            .params("deviceId", deviceId)
+                            .cacheKey("message_login_cache" + mTitle + mDiqu)
+                            .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
+                            .cacheTime(3600 * 72000)
+                            .execute(new StringCallback() {
+                                @Override
+                                public void onSuccess(Response<String> response) {
+
+                                    final JSONObject object = JSON.parseObject(response.body());
+                                    final JSONObject data = object.getJSONObject("data");
+
+                                    final String status = object.getString("status");
+                                    final String message = object.getString("message");
+
+
+                                    Log.d("JBDASJBDBASDA",response.body());
+
+                                    if ("200".equals(status)){
+                                        final JSONArray array = data.getJSONArray("list");
+                                        final boolean nextPage = data.getBoolean("nextpage");
+                                        if (array.size() > 0) {
+                                            page = 2;
+                                            setData(isRefresh, array, nextPage);
+                                        } else {
+                                            if (mDataList != null) {
+                                                mDataList.clear();
+                                                mAdapter.notifyDataSetChanged();
+                                            }
+                                            //TODO 内容为空的处理
+                                            loadingStatus.showEmpty();
+                                            messageRefresh.setEnableRefresh(false);
+                                        }
+                                    }else {
+                                        ToastUtil.shortToast(getContext(), message);
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCacheSuccess(Response<String> response) {
+                                    if (!isInitCache) {
+
+                                        final JSONObject object = JSON.parseObject(response.body());
+                                        final JSONObject data = object.getJSONObject("data");
+                                        final String status = object.getString("status");
+                                        final String message = object.getString("message");
+
+                                        if ("200".equals(status)){
+                                            final JSONArray array = data.getJSONArray("list");
+                                            final boolean nextPage = data.getBoolean("nextpage");
+                                            if (array.size() > 0) {
+                                                page = 2;
+                                                setData(isRefresh, array, nextPage);
+                                            } else {
+                                                if (mDataList != null) {
+                                                    mDataList.clear();
+                                                    mAdapter.notifyDataSetChanged();
+                                                }
+                                                //TODO 内容为空的处理
+                                                loadingStatus.showEmpty();
+                                                messageRefresh.setEnableRefresh(false);
+                                            }
+                                        }else {
+                                            ToastUtil.shortToast(getContext(), message);
+                                        }
+
+
+                                        isInitCache = true;
+                                    }
+                                }
+                            });
+
+                } else {
+                    OkGo.<String>post(BiaoXunTongApi.URL_GETUILIST)
+                            .params("type", mType)
+                            .params("userId", id)
+                            .params("page", page)
+                            .params("diqu", mDiqu)
+                            .params("size", 10)
+                            .params("deviceId", deviceId)
+                            .execute(new StringCallback() {
+                                @Override
+                                public void onSuccess(Response<String> response) {
+
+                                    final JSONObject object = JSON.parseObject(response.body());
+                                    final JSONObject data = object.getJSONObject("data");
+                                    final String status = object.getString("status");
+                                    final String message = object.getString("message");
+
+                                    if ("200".equals(status)){
+                                        final JSONArray array = data.getJSONArray("list");
+                                        final boolean nextPage = data.getBoolean("nextpage");
+                                        if (array.size() > 0) {
+                                            page = 2;
+                                            setData(isRefresh, array, nextPage);
+                                        } else {
+                                            if (mDataList != null) {
+                                                mDataList.clear();
+                                                mAdapter.notifyDataSetChanged();
+                                            }
+                                            //TODO 内容为空的处理
+                                            loadingStatus.showEmpty();
+                                            messageRefresh.setEnableRefresh(false);
+                                        }
+                                    }else {
+                                        ToastUtil.shortToast(getContext(), message);
+                                    }
+
+                                }
+                            });
+                }
+
+
+            } else {
+                //未登录的数据请求
+                if (isRefresh) {
+                    page = 1;
+                    OkGo.<String>post(BiaoXunTongApi.URL_GETUILIST)
+                            .params("type", mType)
                             .params("page", page)
                             .params("diqu", mDiqu)
                             .params("size", 10)
@@ -486,7 +555,6 @@ public class MessageListFragment extends BaseFragment {
                 } else {
                     OkGo.<String>post(BiaoXunTongApi.URL_GETUILIST)
                             .params("type", mType)
-                            .params("userid", id)
                             .params("page", page)
                             .params("diqu", mDiqu)
                             .params("size", 10)
@@ -515,11 +583,141 @@ public class MessageListFragment extends BaseFragment {
                                 }
                             });
                 }
+            }
+        }else if (mType == 2){
+            if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOGIN_SUCCSS)) {
+                llShow.setVisibility(View.GONE);
+                //已登录的数据请求
+                List<UserProfile> users = DatabaseManager.getInstance().getDao().loadAll();
+
+                for (int i = 0; i < users.size(); i++) {
+                    id = users.get(0).getId();
+                }
+
+                if (isRefresh) {
+                    page = 1;
+                    OkGo.<String>post(BiaoXunTongApi.URL_GETUILIST)
+                            .params("type", mType)
+                            .params("userId", id)
+                            .params("page", page)
+                            .params("diqu", mDiqu)
+                            .params("size", 10)
+                            .params("deviceId", deviceId)
+                            .cacheKey("message_login_cache" + mTitle + mDiqu)
+                            .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
+                            .cacheTime(3600 * 72000)
+                            .execute(new StringCallback() {
+                                @Override
+                                public void onSuccess(Response<String> response) {
+
+                                    final JSONObject object = JSON.parseObject(response.body());
+                                    final JSONObject data = object.getJSONObject("data");
+
+                                    final String status = object.getString("status");
+                                    final String message = object.getString("message");
+
+
+                                    Log.d("JBDASJBDBASDA",response.body());
+
+                                    if ("200".equals(status)){
+                                        final JSONArray array = data.getJSONArray("list");
+                                        final boolean nextPage = data.getBoolean("nextpage");
+                                        if (array.size() > 0) {
+                                            page = 2;
+                                            setData(isRefresh, array, nextPage);
+                                        } else {
+                                            if (mDataList != null) {
+                                                mDataList.clear();
+                                                mAdapter.notifyDataSetChanged();
+                                            }
+                                            //TODO 内容为空的处理
+                                            loadingStatus.showEmpty();
+                                            messageRefresh.setEnableRefresh(false);
+                                        }
+                                    }else {
+                                        ToastUtil.shortToast(getContext(), message);
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCacheSuccess(Response<String> response) {
+                                    if (!isInitCache) {
+
+                                        final JSONObject object = JSON.parseObject(response.body());
+                                        final JSONObject data = object.getJSONObject("data");
+                                        final String status = object.getString("status");
+                                        final String message = object.getString("message");
+
+                                        if ("200".equals(status)){
+                                            final JSONArray array = data.getJSONArray("list");
+                                            final boolean nextPage = data.getBoolean("nextpage");
+                                            if (array.size() > 0) {
+                                                page = 2;
+                                                setData(isRefresh, array, nextPage);
+                                            } else {
+                                                if (mDataList != null) {
+                                                    mDataList.clear();
+                                                    mAdapter.notifyDataSetChanged();
+                                                }
+                                                //TODO 内容为空的处理
+                                                loadingStatus.showEmpty();
+                                                messageRefresh.setEnableRefresh(false);
+                                            }
+                                        }else {
+                                            ToastUtil.shortToast(getContext(), message);
+                                        }
+
+
+                                        isInitCache = true;
+                                    }
+                                }
+                            });
+
+                } else {
+                    OkGo.<String>post(BiaoXunTongApi.URL_GETUILIST)
+                            .params("type", mType)
+                            .params("userId", id)
+                            .params("page", page)
+                            .params("diqu", mDiqu)
+                            .params("size", 10)
+                            .params("deviceId", deviceId)
+                            .execute(new StringCallback() {
+                                @Override
+                                public void onSuccess(Response<String> response) {
+
+                                    final JSONObject object = JSON.parseObject(response.body());
+                                    final JSONObject data = object.getJSONObject("data");
+                                    final String status = object.getString("status");
+                                    final String message = object.getString("message");
+
+                                    if ("200".equals(status)){
+                                        final JSONArray array = data.getJSONArray("list");
+                                        final boolean nextPage = data.getBoolean("nextpage");
+                                        if (array.size() > 0) {
+                                            page = 2;
+                                            setData(isRefresh, array, nextPage);
+                                        } else {
+                                            if (mDataList != null) {
+                                                mDataList.clear();
+                                                mAdapter.notifyDataSetChanged();
+                                            }
+                                            //TODO 内容为空的处理
+                                            loadingStatus.showEmpty();
+                                            messageRefresh.setEnableRefresh(false);
+                                        }
+                                    }else {
+                                        ToastUtil.shortToast(getContext(), message);
+                                    }
+
+                                }
+                            });
+                }
 
 
             } else {
                 //未登录的数据请求
-                ToastUtil.shortToast(getContext(),"请先登录");
+                llShow.setVisibility(View.VISIBLE);
             }
         }
 
@@ -574,5 +772,17 @@ public class MessageListFragment extends BaseFragment {
 
         mAdapter.notifyDataSetChanged();
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_to_login:
+                //未登录去登陆
+                startActivity(new Intent(getActivity(), SignInActivity.class));
+                break;
+            default:
+                break;
+        }
     }
 }
