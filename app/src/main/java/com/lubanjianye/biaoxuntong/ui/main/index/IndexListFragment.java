@@ -221,9 +221,6 @@ public class IndexListFragment extends BaseFragment {
 
     private void initAdapter() {
 
-//        mTitle = getArguments().getString("title");
-//        mDiqu = getArguments().getString("diqu");
-
         if ("最新标讯".equals(mTitle)) {
             mAdapter = new IndexListAdapter(R.layout.fragment_index_zxbx_item, mDataList);
             mAdapter.addHeaderView(getHeaderView());
@@ -397,6 +394,8 @@ public class IndexListFragment extends BaseFragment {
 
     public void requestData(final boolean isRefresh) {
 
+
+        Log.d("HBAHBSDSADAA", mDiqu);
 
         if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOGIN_SUCCSS)) {
             //已登录的数据请求

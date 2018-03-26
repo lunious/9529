@@ -50,7 +50,7 @@ public class MessageFragment extends BaseFragment implements View.OnClickListene
         llIvBack.setVisibility(View.VISIBLE);
         mainBarName.setText("消息中心");
 
-        mList.add("全部推送");
+        mList.add("普通消息");
         mList.add("关注推送");
 
     }

@@ -18,6 +18,12 @@ public abstract class BiaoXunTongApi {
 
     public static final String TEST = "http://192.168.0.50:8081/";
 
+
+    /**
+     * 推送列表
+     */
+    public static final String URL_GETUILIST = BASEURL + "bxtajax/GetuiTask/list";
+
     /**
      * 变更公告
      */
