@@ -124,9 +124,6 @@ public class MainFragment extends MainTabFragment implements EasyPermissions.Per
             public void onTabReselected(int position) {
                 // 在FirstPagerFragment,FirstHomeFragment中接收, 因为是嵌套的Fragment
                 // 主要为了交互: 重选tab 如果列表不在顶部则移动到顶部,如果已经在顶部,则刷新
-                if (position == 0) {
-                    EventBus.getDefault().post(new EventMessage("sx"));
-                }
             }
         });
 

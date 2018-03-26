@@ -47,9 +47,6 @@ import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerListener;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,10 +84,9 @@ public class IndexListFragment extends BaseFragment {
     }
 
 
-    public static IndexListFragment getInstance(String title, String diqu) {
+    public static IndexListFragment getInstance(String title) {
         IndexListFragment sf = new IndexListFragment();
         sf.mTitle = title;
-        mDiqu = diqu;
         return sf;
 
     }
@@ -263,31 +259,12 @@ public class IndexListFragment extends BaseFragment {
         indexRefresh = getView().findViewById(R.id.index_refresh);
         loadingStatus = getView().findViewById(R.id.index_list_status_view);
 
-        //注册EventBus
-        EventBus.getDefault().register(this);
 
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        //取消注册EventBus
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void XXXXXX(EventMessage message) {
-
-        if ("sx".equals(message.getMessage())) {
-            //更新UI
-            indexRefresh.autoRefresh();
-        } else if (EventMessage.CLICK_FAV.equals(message.getMessage())) {
-            requestData(true);
+        if (AppSharePreferenceMgr.contains(getContext(), EventMessage.LOCA_AREA)) {
+            mDiqu = (String) AppSharePreferenceMgr.get(getContext(), EventMessage.LOCA_AREA, "");
         }
 
-
     }
-
 
     @Override
     public void initData() {
@@ -414,7 +391,7 @@ public class IndexListFragment extends BaseFragment {
                         .params("size", 10)
                         .params("deviceId", deviceId)
                         .cacheKey("index_list_login_cache" + mTitle + mDiqu)
-                        .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
+                        .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                         .cacheTime(3600 * 72000)
                         .execute(new StringCallback() {
                             @Override
@@ -426,6 +403,9 @@ public class IndexListFragment extends BaseFragment {
                                 final JSONObject data = object.getJSONObject("data");
                                 final String status = object.getString("status");
                                 final String message = object.getString("message");
+
+
+                                Log.d("JUAUISDASDAADA","登录后请求的新数据=="+jiemi);
 
                                 if ("200".equals(status)) {
 
@@ -458,6 +438,8 @@ public class IndexListFragment extends BaseFragment {
                                     final JSONObject data = object.getJSONObject("data");
                                     final String status = object.getString("status");
                                     final String message = object.getString("message");
+
+                                    Log.d("JUAUISDASDAADA","登录后缓存的数据=="+jiemi);
 
                                     if ("200".equals(status)) {
                                         final JSONArray array = data.getJSONArray("list");
@@ -500,6 +482,9 @@ public class IndexListFragment extends BaseFragment {
                                 final String status = object.getString("status");
                                 final String message = object.getString("message");
 
+                                Log.d("JUAUISDASDAADA","登录后请求的下一页数据=="+jiemi);
+
+
                                 if ("200".equals(status)) {
                                     final JSONArray array = data.getJSONArray("list");
                                     final boolean nextPage = data.getBoolean("nextpage");
@@ -535,7 +520,7 @@ public class IndexListFragment extends BaseFragment {
                         .params("size", 10)
                         .params("deviceId", deviceId)
                         .cacheKey("index_list_no_login_cache" + mTitle + mDiqu)
-                        .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
+                        .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                         .cacheTime(3600 * 72000)
                         .execute(new StringCallback() {
                             @Override
@@ -546,6 +531,9 @@ public class IndexListFragment extends BaseFragment {
                                 final JSONObject data = object.getJSONObject("data");
                                 final String status = object.getString("status");
                                 final String message = object.getString("message");
+
+
+                                Log.d("JUAUISDASDAADA","未登录时请求的新数据=="+jiemi);
 
                                 if ("200".equals(status)) {
 
@@ -578,6 +566,9 @@ public class IndexListFragment extends BaseFragment {
                                     final JSONObject data = object.getJSONObject("data");
                                     final String status = object.getString("status");
                                     final String message = object.getString("message");
+
+
+                                    Log.d("JUAUISDASDAADA","未登录缓存的数据=="+jiemi);
 
                                     if ("200".equals(status)) {
                                         final JSONArray array = data.getJSONArray("list");
@@ -618,6 +609,8 @@ public class IndexListFragment extends BaseFragment {
                                 final JSONObject data = object.getJSONObject("data");
                                 final String status = object.getString("status");
                                 final String message = object.getString("message");
+
+                                Log.d("JUAUISDASDAADA","未登录时请求的下一页数据=="+jiemi);
 
                                 if ("200".equals(status)) {
                                     final JSONArray array = data.getJSONArray("list");

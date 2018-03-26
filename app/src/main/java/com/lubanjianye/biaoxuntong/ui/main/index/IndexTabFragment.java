@@ -375,12 +375,11 @@ public class IndexTabFragment extends BaseFragment implements View.OnClickListen
 
     private void setUI(List<String> mList) {
         String mDiqu = tv_location.getText().toString();
-        mAdapter = new IndexFragmentAdapter(getFragmentManager(), mList, mDiqu);
+        mAdapter = new IndexFragmentAdapter(getFragmentManager(), mList);
         indexVp.setAdapter(mAdapter);
         indexStlTab.setViewPager(indexVp);
         mAdapter.notifyDataSetChanged();
 
-        Log.d("SADBUASBDASDA", mDiqu);
 
         BiaoXunTong.getHandler().postDelayed(new Runnable() {
             @Override

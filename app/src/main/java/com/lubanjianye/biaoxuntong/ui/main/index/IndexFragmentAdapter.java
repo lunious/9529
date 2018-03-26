@@ -24,24 +24,20 @@ public class IndexFragmentAdapter extends FragmentPagerAdapter {
     private ArrayList<Fragment> mFragment = new ArrayList<>();
 
 
-    private String mDiqu = "";
 
-    public IndexFragmentAdapter(FragmentManager fm, List<String> titles, String diqu) {
+    public IndexFragmentAdapter(FragmentManager fm, List<String> titles) {
         super(fm);
         this.titles = titles;
-        this.mDiqu = diqu;
 
         for (int i = 0; i < titles.size(); i++) {
 
             if ("行业资讯".equals(titles.get(i))) {
                 mFragment.add(new IndexHyzxListFragment());
             } else {
-                mFragment.add(IndexListFragment.getInstance(titles.get(i), mDiqu));
+                mFragment.add(IndexListFragment.getInstance(titles.get(i)));
             }
         }
 
-
-        Log.d("DASDSADSADADASDA", mDiqu);
     }
 
     @Override
